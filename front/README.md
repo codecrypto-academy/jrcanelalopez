@@ -19,3 +19,9 @@ npm i react-router-dom
 ```bash
 npm install ethers
 ```
+
+### Run proyect
+
+```bash
+npm run dev
+```
