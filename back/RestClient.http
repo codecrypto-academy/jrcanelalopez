@@ -1,0 +1,12 @@
+### GET request
+GET http://localhost:3000/
+
+
+### GET balance with address
+GET http://localhost:3000/balance/0xdA4f8C00E7FdE00b029E7ddaf2aAb85590e64b34
+
+### GET balance con ether with address
+GET http://localhost:3000/balanceEthers/0xdA4f8C00E7FdE00b029E7ddaf2aAb85590e64b34?ether=true
+
+### Get /faucet/:address/:amount
+GET http://localhost:3000/faucet/0xdA4f8C00E7FdE00b029E7ddaf2aAb85590e64b34/0.1
