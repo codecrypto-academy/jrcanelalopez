@@ -5,6 +5,4 @@ docker run -d \
   -v $(pwd):/data \
   hyperledger/besu:latest \
   --config-file=/data/config.toml \
-  --data-path=/data/nodo2/data \
-  --node-private-key-file=/data/nodo2/key \
-  --genesis-file=/data/genesis.json
+  --data-path=/data/nodo2/data
