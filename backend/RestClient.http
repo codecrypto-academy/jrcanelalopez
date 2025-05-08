@@ -1,0 +1,11 @@
+### GET request
+GET http://localhost:3000/bloque
+
+### GET block by ID
+GET http://localhost:3000/bloque/22426891
+
+### GET transaction by ID
+GET http://localhost:3000/tx/0xac2312a07bdac7b7471ce80aa2dd7414e42e73cf29ac25261b3042d2130cbd46
+
+### GET balance by address
+GET http://localhost:3000/balance/0xfd3abefcd3f20972dc2b7f7714630e5a2cf2c6b2
