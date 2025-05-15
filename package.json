@@ -1,0 +1,10 @@
+{
+  "name": "web2.5-crypto",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "yargs": "^17.7.2"
+  }
+}
