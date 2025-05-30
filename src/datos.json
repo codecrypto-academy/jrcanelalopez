@@ -1,0 +1,48 @@
+{
+  "header": {
+    "nombre": "Diseño Web 2.5",
+    "links": [
+      { "texto": "Home", "url": "/" },
+      { "texto": "About", "url": "/about" },
+      { "texto": "Contact", "url": "/contact" }
+    ]
+  },
+  "footer": {
+    "texto": "© 2025 Diseño Web 2.5",
+    "links": [
+      {
+        "grupo": "Contactos",
+        "enlaces": [
+          { "texto": "Email", "url": "mailto:info@disenoweb25.com" },
+          { "texto": "Twitter", "url": "https://twitter.com/disenoweb25" },
+          {
+            "texto": "LinkedIn",
+            "url": "https://linkedin.com/company/disenoweb25"
+          }
+        ]
+      },
+      {
+        "grupo": "Help",
+        "enlaces": [
+          { "texto": "FAQ", "url": "/faq" },
+          { "texto": "Support", "url": "/support" },
+          { "texto": "Documentation", "url": "/docs" }
+        ]
+      }
+    ]
+  },
+  "precios": {
+    "basico": {
+      "precio": 100,
+      "descripcion": "Plan básico con funcionalidades esenciales."
+    },
+    "avanzado": {
+      "precio": 200,
+      "descripcion": "Plan avanzado con características adicionales."
+    },
+    "premium": {
+      "precio": 300,
+      "descripcion": "Plan premium con todas las funcionalidades."
+    }
+  }
+}
