@@ -1,0 +1,10 @@
+{
+  "name": "web2.5-sql",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "mysql8": "^2.17.3",
+    "pg": "^8.16.0"
+  }
+}
