@@ -1,0 +1,8 @@
+### GET request
+GET http://localhost:5555/ping
+
+### GET request
+GET http://localhost:5555/products
+
+### GET request
+GET http://localhost:5555/products/1
