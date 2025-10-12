@@ -1,0 +1,2 @@
+### GET request
+GET http://localhost:3001/getTokens?address=0xcB1C1FdE09f811B294172696404e88E658659905&chain=0x1
