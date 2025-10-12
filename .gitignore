@@ -60,3 +60,6 @@ temp/
 # Miscellaneous
 *.tgz
 *.tar.gz
+
+# Lib
+lib/
