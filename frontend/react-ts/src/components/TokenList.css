@@ -1,0 +1,141 @@
+.token-list {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.token-list h2 {
+  margin: 0 0 1.5rem 0;
+  color: #1a202c;
+  font-size: 1.5rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #718096;
+}
+
+.empty-hint {
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.token-cards {
+  display: grid;
+  gap: 1rem;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.token-card {
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.token-card:hover {
+  border-color: #667eea;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.token-card.selected {
+  border-color: #667eea;
+  background-color: #f7fafc;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.token-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.token-emoji {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.token-info {
+  flex: 1;
+}
+
+.token-type {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 1.125rem;
+}
+
+.token-id {
+  color: #718096;
+  font-size: 0.875rem;
+  font-family: monospace;
+}
+
+.token-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.token-detail {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.token-detail .label {
+  color: #718096;
+  font-weight: 500;
+}
+
+.token-detail .value {
+  color: #2d3748;
+  font-family: monospace;
+}
+
+.token-card-footer {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 0.75rem;
+}
+
+.view-details-btn {
+  background: none;
+  border: none;
+  color: #667eea;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 0;
+  transition: color 0.3s ease;
+}
+
+.view-details-btn:hover {
+  color: #764ba2;
+}
+
+.token-cards::-webkit-scrollbar {
+  width: 8px;
+}
+
+.token-cards::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.token-cards::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 4px;
+}
+
+.token-cards::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}

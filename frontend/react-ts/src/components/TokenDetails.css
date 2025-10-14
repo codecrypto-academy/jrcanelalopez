@@ -1,0 +1,147 @@
+.token-details {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: sticky;
+  top: 1rem;
+}
+
+.details-header {
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  padding: 1.5rem;
+  border-left: 4px solid;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.details-emoji {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.details-header h2 {
+  margin: 0;
+  color: #1a202c;
+  font-size: 1.5rem;
+}
+
+.details-subtitle {
+  margin: 0.25rem 0 0 0;
+  color: #718096;
+  font-family: monospace;
+  font-size: 0.875rem;
+}
+
+.details-body {
+  padding: 1.5rem;
+  max-height: calc(70vh - 120px);
+  overflow-y: auto;
+}
+
+.detail-section {
+  margin-bottom: 2rem;
+}
+
+.detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.detail-section h3 {
+  margin: 0 0 1rem 0;
+  color: #2d3748;
+  font-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: #718096;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.detail-value {
+  color: #2d3748;
+  font-size: 0.875rem;
+  text-align: right;
+  max-width: 60%;
+  word-break: break-all;
+}
+
+.detail-value.code {
+  font-family: monospace;
+  background-color: #edf2f7;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.genealogy-note {
+  background-color: #ebf8ff;
+  border-left: 3px solid #3182ce;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+.genealogy-note p {
+  margin: 0;
+  color: #2c5282;
+  font-size: 0.875rem;
+}
+
+.blockchain-info {
+  background-color: #f0fff4;
+  border-left: 3px solid #38a169;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.blockchain-info p {
+  margin: 0 0 0.75rem 0;
+  color: #22543d;
+  font-weight: 600;
+}
+
+.blockchain-info ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: #276749;
+}
+
+.blockchain-info li {
+  margin: 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+.details-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.details-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.details-body::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 3px;
+}
+
+.details-body::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
