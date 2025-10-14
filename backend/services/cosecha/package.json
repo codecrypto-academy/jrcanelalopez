@@ -1,0 +1,24 @@
+{
+  "name": "cosecha-service",
+  "version": "1.0.0",
+  "description": "Servicio que auto-genera tokens COSECHA cada segundo",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "blockchain",
+    "supply-chain",
+    "cosecha"
+  ],
+  "author": "JRC",
+  "license": "MIT",
+  "dependencies": {
+    "ethers": "^6.9.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

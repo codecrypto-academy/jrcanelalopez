@@ -1,0 +1,346 @@
+{"level":"WARN","timestamp":"2025-10-14T22:06:57.593Z","logger":"kafkajs","message":"KafkaJS v2.0.0 switched default partitioner. To retain the same partitioning behavior as in previous versions, create the producer with the option \"createPartitioner: Partitioners.LegacyPartitioner\". See the migration guide at https://kafka.js.org/docs/migration-guide-v2.0.0#producer-new-default-partitioner for details. Silence this warning by setting the environment variable \"KAFKAJS_NO_PARTITIONER_WARNING=1\""}
+🚀 Starting Off-Chain Monitor...
+📡 RPC URL: http://localhost:8545
+📝 Contract: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+📨 Kafka Broker: localhost:9092
+⏱️  Poll Interval: 1000ms
+
+(node:88178) TimeoutNegativeWarning: -1760479617610 is a negative number.
+Timeout duration was set to 1.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Connected to Kafka
+
+📦 Starting from block: 3
+
+🔍 Checking blocks 4 to 9...
+📢 Found 6 new TokenCreated events
+
+🆕 New Token Created:
+   Token ID: 1
+   Type: COSECHA
+   Producer: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+   Parents: [0, 0]
+   Timestamp: 2025-10-14T22:08:17.000Z
+   ✅ Added to COSECHA pool (total: 1)
+
+🆕 New Token Created:
+   Token ID: 2
+   Type: COSECHA
+   Producer: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+   Parents: [0, 0]
+   Timestamp: 2025-10-14T22:08:17.000Z
+   ✅ Added to COSECHA pool (total: 2)
+
+🆕 New Token Created:
+   Token ID: 3
+   Type: COSECHA
+   Producer: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+   Parents: [0, 0]
+   Timestamp: 2025-10-14T22:08:17.000Z
+   ✅ Added to COSECHA pool (total: 3)
+
+🆕 New Token Created:
+   Token ID: 4
+   Type: COSECHA
+   Producer: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+   Parents: [0, 0]
+   Timestamp: 2025-10-14T22:08:17.000Z
+   ✅ Added to COSECHA pool (total: 4)
+
+🆕 New Token Created:
+   Token ID: 5
+   Type: COSECHA
+   Producer: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+   Parents: [0, 0]
+   Timestamp: 2025-10-14T22:08:17.000Z
+   ✅ Added to COSECHA pool (total: 5)
+
+🆕 New Token Created:
+   Token ID: 6
+   Type: COSECHA
+   Producer: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+   Parents: [0, 0]
+   Timestamp: 2025-10-14T22:08:17.000Z
+   ✅ Added to COSECHA pool (total: 6)
+
+📤 Published to Kafka:
+   Topic: cosecha-event
+   Payload: {
+  tokenId1: 1,
+  tokenId2: 2,
+  tokenType: 'COSECHA',
+  targetType: 'ALMACEN',
+  timestamp: 1760479698688
+}
+🔍 Checking blocks 10 to 10...
+📢 Found 1 new TokenCreated events
+
+🆕 New Token Created:
+   Token ID: 7
+   Type: ALMACEN
+   Producer: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+   Parents: [1, 2]
+   Timestamp: 2025-10-14T22:08:18.000Z
+   ✅ Added to ALMACEN pool (total: 1)
+
+📤 Published to Kafka:
+   Topic: cosecha-event
+   Payload: {
+  tokenId1: 3,
+  tokenId2: 4,
+  tokenType: 'COSECHA',
+  targetType: 'ALMACEN',
+  timestamp: 1760479699674
+}
+🔍 Checking blocks 11 to 11...
+📢 Found 1 new TokenCreated events
+
+🆕 New Token Created:
+   Token ID: 8
+   Type: ALMACEN
+   Producer: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+   Parents: [3, 4]
+   Timestamp: 2025-10-14T22:08:19.000Z
+   ✅ Added to ALMACEN pool (total: 2)
+
+📤 Published to Kafka:
+   Topic: cosecha-event
+   Payload: {
+  tokenId1: 5,
+  tokenId2: 6,
+  tokenType: 'COSECHA',
+  targetType: 'ALMACEN',
+  timestamp: 1760479700672
+}
+
+📤 Published to Kafka:
+   Topic: almacen-event
+   Payload: {
+  tokenId1: 7,
+  tokenId2: 8,
+  tokenType: 'ALMACEN',
+  targetType: 'MOLIENDA',
+  timestamp: 1760479700679
+}
+🔍 Checking blocks 12 to 13...
+📢 Found 2 new TokenCreated events
+
+🆕 New Token Created:
+   Token ID: 9
+   Type: ALMACEN
+   Producer: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+   Parents: [5, 6]
+   Timestamp: 2025-10-14T22:08:20.000Z
+   ✅ Added to ALMACEN pool (total: 1)
+
+🆕 New Token Created:
+   Token ID: 10
+   Type: MOLIENDA
+   Producer: 0x90F79bf6EB2c4f870365E785982E1f101E93b906
+   Parents: [7, 8]
+   Timestamp: 2025-10-14T22:08:20.000Z
+   ✅ Added to MOLIENDA pool (total: 1)
+🔍 Checking blocks 14 to 17...
+📢 Found 4 new TokenCreated events
+
+🆕 New Token Created:
+   Token ID: 11
+   Type: COSECHA
+   Producer: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+   Parents: [0, 0]
+   Timestamp: 2025-10-14T22:09:36.000Z
+   ✅ Added to COSECHA pool (total: 1)
+
+🆕 New Token Created:
+   Token ID: 12
+   Type: COSECHA
+   Producer: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+   Parents: [0, 0]
+   Timestamp: 2025-10-14T22:09:36.000Z
+   ✅ Added to COSECHA pool (total: 2)
+
+🆕 New Token Created:
+   Token ID: 13
+   Type: COSECHA
+   Producer: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+   Parents: [0, 0]
+   Timestamp: 2025-10-14T22:09:36.000Z
+   ✅ Added to COSECHA pool (total: 3)
+
+🆕 New Token Created:
+   Token ID: 14
+   Type: COSECHA
+   Producer: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+   Parents: [0, 0]
+   Timestamp: 2025-10-14T22:09:36.000Z
+   ✅ Added to COSECHA pool (total: 4)
+
+📤 Published to Kafka:
+   Topic: cosecha-event
+   Payload: {
+  tokenId1: 11,
+  tokenId2: 12,
+  tokenType: 'COSECHA',
+  targetType: 'ALMACEN',
+  timestamp: 1760479776687
+}
+🔍 Checking blocks 18 to 18...
+📢 Found 1 new TokenCreated events
+
+🆕 New Token Created:
+   Token ID: 15
+   Type: ALMACEN
+   Producer: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+   Parents: [11, 12]
+   Timestamp: 2025-10-14T22:09:36.000Z
+   ✅ Added to ALMACEN pool (total: 2)
+
+📤 Published to Kafka:
+   Topic: cosecha-event
+   Payload: {
+  tokenId1: 13,
+  tokenId2: 14,
+  tokenType: 'COSECHA',
+  targetType: 'ALMACEN',
+  timestamp: 1760479777683
+}
+
+📤 Published to Kafka:
+   Topic: almacen-event
+   Payload: {
+  tokenId1: 9,
+  tokenId2: 15,
+  tokenType: 'ALMACEN',
+  targetType: 'MOLIENDA',
+  timestamp: 1760479777688
+}
+🔍 Checking blocks 19 to 20...
+📢 Found 2 new TokenCreated events
+
+🆕 New Token Created:
+   Token ID: 16
+   Type: ALMACEN
+   Producer: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+   Parents: [13, 14]
+   Timestamp: 2025-10-14T22:09:37.000Z
+   ✅ Added to ALMACEN pool (total: 1)
+
+🆕 New Token Created:
+   Token ID: 17
+   Type: MOLIENDA
+   Producer: 0x90F79bf6EB2c4f870365E785982E1f101E93b906
+   Parents: [9, 15]
+   Timestamp: 2025-10-14T22:09:37.000Z
+   ✅ Added to MOLIENDA pool (total: 2)
+
+📤 Published to Kafka:
+   Topic: molienda-event
+   Payload: {
+  tokenId1: 10,
+  tokenId2: 17,
+  tokenType: 'MOLIENDA',
+  targetType: 'HORNEADO',
+  timestamp: 1760479778690
+}
+🔍 Checking blocks 21 to 21...
+📢 Found 1 new TokenCreated events
+
+🆕 New Token Created:
+   Token ID: 18
+   Type: HORNEADO
+   Producer: 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65
+   Parents: [10, 17]
+   Timestamp: 2025-10-14T22:09:38.000Z
+   ✅ Added to HORNEADO pool (total: 1)
+🔍 Checking blocks 22 to 25...
+📢 Found 4 new TokenCreated events
+
+🆕 New Token Created:
+   Token ID: 19
+   Type: COSECHA
+   Producer: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+   Parents: [0, 0]
+   Timestamp: 2025-10-14T22:12:22.000Z
+   ✅ Added to COSECHA pool (total: 1)
+
+🆕 New Token Created:
+   Token ID: 20
+   Type: COSECHA
+   Producer: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+   Parents: [0, 0]
+   Timestamp: 2025-10-14T22:12:22.000Z
+   ✅ Added to COSECHA pool (total: 2)
+
+🆕 New Token Created:
+   Token ID: 21
+   Type: COSECHA
+   Producer: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+   Parents: [0, 0]
+   Timestamp: 2025-10-14T22:12:22.000Z
+   ✅ Added to COSECHA pool (total: 3)
+
+🆕 New Token Created:
+   Token ID: 22
+   Type: COSECHA
+   Producer: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+   Parents: [0, 0]
+   Timestamp: 2025-10-14T22:12:22.000Z
+   ✅ Added to COSECHA pool (total: 4)
+
+📤 Published to Kafka:
+   Topic: cosecha-event
+   Payload: {
+  tokenId1: 19,
+  tokenId2: 20,
+  tokenType: 'COSECHA',
+  targetType: 'ALMACEN',
+  timestamp: 1760479942721
+}
+🔍 Checking blocks 26 to 26...
+📢 Found 1 new TokenCreated events
+
+🆕 New Token Created:
+   Token ID: 23
+   Type: ALMACEN
+   Producer: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+   Parents: [19, 20]
+   Timestamp: 2025-10-14T22:12:22.000Z
+   ✅ Added to ALMACEN pool (total: 2)
+
+📤 Published to Kafka:
+   Topic: cosecha-event
+   Payload: {
+  tokenId1: 21,
+  tokenId2: 22,
+  tokenType: 'COSECHA',
+  targetType: 'ALMACEN',
+  timestamp: 1760479943718
+}
+
+📤 Published to Kafka:
+   Topic: almacen-event
+   Payload: {
+  tokenId1: 16,
+  tokenId2: 23,
+  tokenType: 'ALMACEN',
+  targetType: 'MOLIENDA',
+  timestamp: 1760479943723
+}
+🔍 Checking blocks 27 to 28...
+📢 Found 2 new TokenCreated events
+
+🆕 New Token Created:
+   Token ID: 24
+   Type: ALMACEN
+   Producer: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+   Parents: [21, 22]
+   Timestamp: 2025-10-14T22:12:23.000Z
+   ✅ Added to ALMACEN pool (total: 1)
+
+🆕 New Token Created:
+   Token ID: 25
+   Type: MOLIENDA
+   Producer: 0x90F79bf6EB2c4f870365E785982E1f101E93b906
+   Parents: [16, 23]
+   Timestamp: 2025-10-14T22:12:23.000Z
+   ✅ Added to MOLIENDA pool (total: 1)

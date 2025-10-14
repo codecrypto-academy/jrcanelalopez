@@ -1,0 +1,205 @@
+{"level":"WARN","timestamp":"2025-10-14T22:07:02.384Z","logger":"kafkajs","message":"KafkaJS v2.0.0 switched default partitioner. To retain the same partitioning behavior as in previous versions, create the producer with the option \"createPartitioner: Partitioners.LegacyPartitioner\". See the migration guide at https://kafka.js.org/docs/migration-guide-v2.0.0#producer-new-default-partitioner for details. Silence this warning by setting the environment variable \"KAFKAJS_NO_PARTITIONER_WARNING=1\""}
+🚀 Starting ALMACEN Service...
+
+🔗 Connecting to blockchain...
+📡 RPC URL: http://localhost:8545
+📝 Contract: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+
+✅ Connected as ALMACENADOR
+   Address: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+   Balance: 10000.0 ETH
+
+📨 Connecting to Kafka...
+(node:88506) TimeoutNegativeWarning: -1760479622463 is a negative number.
+Timeout duration was set to 1.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Connected to Kafka broker: localhost:9092
+
+👂 Subscribed to topic: cosecha-event
+
+⏳ Waiting for messages...
+
+{"level":"INFO","timestamp":"2025-10-14T22:07:02.475Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"almacen-group"}
+{"level":"INFO","timestamp":"2025-10-14T22:07:21.282Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"almacen-group","memberId":"almacen-service-f63594fe-ff5d-4dad-bcf9-7b45d2e5e489","leaderId":"almacen-service-f63594fe-ff5d-4dad-bcf9-7b45d2e5e489","isLeader":true,"memberAssignment":{"cosecha-event":[0]},"groupProtocol":"RoundRobinAssigner","duration":18806}
+
+📨 New message received:
+   Token 1: 1
+   Token 2: 2
+   Type: COSECHA
+   Target: ALMACEN
+
+🏭 Creating ALMACEN token with parents [1, 2]...
+   Transaction sent: 0x98caf96d1fd15ecd0f06990949e289384572482fffb745c9012d7f54ccf3ac14
+   Waiting for confirmation...
+   ✅ Transaction confirmed in block 10
+
+🎉 ALMACEN token created successfully!
+   Token ID: 7
+   Parent 1: 1
+   Parent 2: 2
+   Gas used: 200751
+
+📤 Published to Kafka:
+   Topic: almacen-event
+   Payload: {
+  tokenId: 7,
+  tokenType: 'ALMACEN',
+  targetType: 'MOLIENDA',
+  timestamp: 1760479698818
+}
+
+📨 New message received:
+   Token 1: 3
+   Token 2: 4
+   Type: COSECHA
+   Target: ALMACEN
+
+🏭 Creating ALMACEN token with parents [3, 4]...
+   Transaction sent: 0xee57eef3c14df2a4cde9f7df7d234c762863fbea691c81cd73755e0211524082
+   Waiting for confirmation...
+   ✅ Transaction confirmed in block 11
+
+🎉 ALMACEN token created successfully!
+   Token ID: 8
+   Parent 1: 3
+   Parent 2: 4
+   Gas used: 183651
+
+📤 Published to Kafka:
+   Topic: almacen-event
+   Payload: {
+  tokenId: 8,
+  tokenType: 'ALMACEN',
+  targetType: 'MOLIENDA',
+  timestamp: 1760479699777
+}
+
+📨 New message received:
+   Token 1: 5
+   Token 2: 6
+   Type: COSECHA
+   Target: ALMACEN
+
+🏭 Creating ALMACEN token with parents [5, 6]...
+   Transaction sent: 0x4f688264b60b1dbf61d7d2313d790149bd1f77f27b8a0435fd26a91a19e127cf
+   Waiting for confirmation...
+   ✅ Transaction confirmed in block 12
+
+🎉 ALMACEN token created successfully!
+   Token ID: 9
+   Parent 1: 5
+   Parent 2: 6
+   Gas used: 183651
+
+📤 Published to Kafka:
+   Topic: almacen-event
+   Payload: {
+  tokenId: 9,
+  tokenType: 'ALMACEN',
+  targetType: 'MOLIENDA',
+  timestamp: 1760479700773
+}
+
+📨 New message received:
+   Token 1: 11
+   Token 2: 12
+   Type: COSECHA
+   Target: ALMACEN
+
+🏭 Creating ALMACEN token with parents [11, 12]...
+   Transaction sent: 0xcd3f0e02fedb098ea50409c749f7a9545bce292bcdd8ec37b41367cdf2bc3724
+   Waiting for confirmation...
+   ✅ Transaction confirmed in block 18
+
+🎉 ALMACEN token created successfully!
+   Token ID: 15
+   Parent 1: 11
+   Parent 2: 12
+   Gas used: 183651
+
+📤 Published to Kafka:
+   Topic: almacen-event
+   Payload: {
+  tokenId: 15,
+  tokenType: 'ALMACEN',
+  targetType: 'MOLIENDA',
+  timestamp: 1760479776798
+}
+
+📨 New message received:
+   Token 1: 13
+   Token 2: 14
+   Type: COSECHA
+   Target: ALMACEN
+
+🏭 Creating ALMACEN token with parents [13, 14]...
+   Transaction sent: 0xd3ff6e1f8ce5c6a05e0a70a3bf8783a770c1b72aa0e473fb36c67fecff69e478
+   Waiting for confirmation...
+   ✅ Transaction confirmed in block 19
+
+🎉 ALMACEN token created successfully!
+   Token ID: 16
+   Parent 1: 13
+   Parent 2: 14
+   Gas used: 183651
+
+📤 Published to Kafka:
+   Topic: almacen-event
+   Payload: {
+  tokenId: 16,
+  tokenType: 'ALMACEN',
+  targetType: 'MOLIENDA',
+  timestamp: 1760479777774
+}
+
+📨 New message received:
+   Token 1: 19
+   Token 2: 20
+   Type: COSECHA
+   Target: ALMACEN
+
+🏭 Creating ALMACEN token with parents [19, 20]...
+   Transaction sent: 0x557bc66d8ab909704cc13c718b84eb2623601d2dc71650e235774f72bf3bd5c0
+   Waiting for confirmation...
+   ✅ Transaction confirmed in block 26
+
+🎉 ALMACEN token created successfully!
+   Token ID: 23
+   Parent 1: 19
+   Parent 2: 20
+   Gas used: 183651
+
+📤 Published to Kafka:
+   Topic: almacen-event
+   Payload: {
+  tokenId: 23,
+  tokenType: 'ALMACEN',
+  targetType: 'MOLIENDA',
+  timestamp: 1760479942828
+}
+
+📨 New message received:
+   Token 1: 21
+   Token 2: 22
+   Type: COSECHA
+   Target: ALMACEN
+
+🏭 Creating ALMACEN token with parents [21, 22]...
+   Transaction sent: 0x24911bdc9eb318bd9bec84b07f89f1b39674917e6da4b18ba9672fc8d9118ea7
+   Waiting for confirmation...
+   ✅ Transaction confirmed in block 27
+
+🎉 ALMACEN token created successfully!
+   Token ID: 24
+   Parent 1: 21
+   Parent 2: 22
+   Gas used: 183651
+
+📤 Published to Kafka:
+   Topic: almacen-event
+   Payload: {
+  tokenId: 24,
+  tokenType: 'ALMACEN',
+  targetType: 'MOLIENDA',
+  timestamp: 1760479943815
+}

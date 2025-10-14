@@ -1,0 +1,22 @@
+{
+  "name": "supply-chain-backend",
+  "version": "1.0.0",
+  "description": "Backend services for supply chain tracking",
+  "private": true,
+  "scripts": {
+    "cosecha": "cd services/cosecha && npm start",
+    "almacenamiento": "cd services/almacenamiento && npm start",
+    "molienda": "cd services/molienda && npm start",
+    "horneado": "cd services/horneado && npm start",
+    "embalaje": "cd services/embalaje && npm start",
+    "distribucion": "cd services/distribucion && npm start",
+    "venta": "cd services/venta && npm start"
+  },
+  "keywords": [
+    "blockchain",
+    "supply-chain",
+    "ethereum"
+  ],
+  "author": "JRC",
+  "license": "MIT"
+}

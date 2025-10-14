@@ -1,0 +1,26 @@
+{
+  "name": "off-chain-monitor",
+  "version": "1.0.0",
+  "description": "Monitor that reads blockchain events and publishes to Kafka",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "blockchain",
+    "kafka",
+    "monitor",
+    "supply-chain"
+  ],
+  "author": "JRC",
+  "license": "MIT",
+  "dependencies": {
+    "ethers": "^6.9.0",
+    "kafkajs": "^2.2.4",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

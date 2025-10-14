@@ -1,0 +1,62 @@
+{"level":"WARN","timestamp":"2025-10-14T21:21:59.198Z","logger":"kafkajs","message":"KafkaJS v2.0.0 switched default partitioner. To retain the same partitioning behavior as in previous versions, create the producer with the option \"createPartitioner: Partitioners.LegacyPartitioner\". See the migration guide at https://kafka.js.org/docs/migration-guide-v2.0.0#producer-new-default-partitioner for details. Silence this warning by setting the environment variable \"KAFKAJS_NO_PARTITIONER_WARNING=1\""}
+🚀 Starting EMBALAJE Service...
+
+🔗 Connecting to blockchain...
+📡 RPC URL: http://localhost:8545
+📝 Contract: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+
+✅ Connected as EMBALADOR
+   Address: 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc
+   Balance: 10000.0 ETH
+
+📨 Connecting to Kafka...
+(node:64633) TimeoutNegativeWarning: -1760476919297 is a negative number.
+Timeout duration was set to 1.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Connected to Kafka broker: localhost:9092
+
+👂 Subscribed to topic: horneado-event
+
+⏳ Waiting for messages...
+
+{"level":"INFO","timestamp":"2025-10-14T21:21:59.312Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"embalaje-group"}
+{"level":"INFO","timestamp":"2025-10-14T21:21:59.341Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"embalaje-group","memberId":"embalaje-service-22d96c79-2d18-4bf0-b59b-66f29c940fd4","leaderId":"embalaje-service-22d96c79-2d18-4bf0-b59b-66f29c940fd4","isLeader":true,"memberAssignment":{"horneado-event":[0]},"groupProtocol":"RoundRobinAssigner","duration":29}
+
+📨 New message received:
+   Token 1: 48
+   Token 2: 53
+   Type: HORNEADO
+   Target: EMBALAJE
+
+📦 Creating EMBALAJE token with parents [48, 53]...
+
+❌ Error processing message: execution reverted: "Parents must be same type" (action="estimateGas", data="0x08c379a000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000019506172656e7473206d7573742062652073616d65207479706500000000000000", reason="Parents must be same type", transaction={ "data": "0x87e434d200000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000000000000035", "from": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc", "to": "0x5FbDB2315678afecb367f032d93F642f64180aa3" }, invocation=null, revert={ "args": [ "Parents must be same type" ], "name": "Error", "signature": "Error(string)" }, code=CALL_EXCEPTION, version=6.15.0)
+   Reason: Parents must be same type
+
+📨 New message received:
+   Token 1: 38
+   Token 2: 53
+   Type: HORNEADO
+   Target: EMBALAJE
+
+📦 Creating EMBALAJE token with parents [38, 53]...
+   Transaction sent: 0xef841eb07ba4cb8f726f9e171470c96b9fb204ec3a11bcdea967e98d26b2d3d5
+   Waiting for confirmation...
+   ✅ Transaction confirmed in block 57
+
+🎉 EMBALAJE token created successfully!
+   Token ID: 54
+   Parent 1: 38
+   Parent 2: 53
+   Gas used: 200976
+{"level":"ERROR","timestamp":"2025-10-14T21:25:17.712Z","logger":"kafkajs","message":"[Connection] Response Metadata(key: 3, version: 6)","broker":"localhost:9092","clientId":"embalaje-service","error":"There is no leader for this topic-partition as we are in the middle of a leadership election","correlationId":1,"size":88}
+
+📤 Published to Kafka:
+   Topic: embalaje-event
+   Payload: {
+  tokenId1: 38,
+  tokenId2: 54,
+  tokenType: 'EMBALAJE',
+  targetType: 'DISTRIBUCION',
+  timestamp: 1760477117675
+}

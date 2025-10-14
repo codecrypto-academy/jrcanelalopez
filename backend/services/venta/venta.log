@@ -1,0 +1,23 @@
+🚀 Starting VENTA Service (Final Service)...
+
+🔗 Connecting to blockchain...
+📡 RPC URL: http://localhost:8545
+📝 Contract: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+
+✅ Connected as VENDEDOR
+   Address: 0x14dC79964da2C08b23698B3D3cc7Ca32193d9955
+   Balance: 10000.0 ETH
+
+📨 Connecting to Kafka...
+(node:1989) TimeoutNegativeWarning: -1760480818873 is a negative number.
+Timeout duration was set to 1.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Connected to Kafka broker: localhost:9092
+
+{"level":"ERROR","timestamp":"2025-10-14T22:26:58.903Z","logger":"kafkajs","message":"[Connection] Response Metadata(key: 3, version: 6)","broker":"localhost:9092","clientId":"venta-service","error":"There is no leader for this topic-partition as we are in the middle of a leadership election","correlationId":1,"size":92}
+👂 Subscribed to topic: distribucion-event
+
+⏳ Waiting for messages...
+
+{"level":"INFO","timestamp":"2025-10-14T22:26:59.158Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"venta-group"}
+{"level":"INFO","timestamp":"2025-10-14T22:26:59.186Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"venta-group","memberId":"venta-service-e077e286-9c31-4582-9de3-9bd7f71b5272","leaderId":"venta-service-e077e286-9c31-4582-9de3-9bd7f71b5272","isLeader":true,"memberAssignment":{"distribucion-event":[0]},"groupProtocol":"RoundRobinAssigner","duration":27}

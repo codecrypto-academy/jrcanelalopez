@@ -1,0 +1,26 @@
+{
+  "name": "molienda-service",
+  "version": "1.0.0",
+  "description": "MOLIENDA service - Consumes ALMACEN events from Kafka and creates MOLIENDA tokens",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "blockchain",
+    "supply-chain",
+    "kafka",
+    "molienda"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ethers": "^6.9.0",
+    "kafkajs": "^2.0.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

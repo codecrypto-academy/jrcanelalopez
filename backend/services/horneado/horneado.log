@@ -1,0 +1,83 @@
+{"level":"WARN","timestamp":"2025-10-14T22:07:19.863Z","logger":"kafkajs","message":"KafkaJS v2.0.0 switched default partitioner. To retain the same partitioning behavior as in previous versions, create the producer with the option \"createPartitioner: Partitioners.LegacyPartitioner\". See the migration guide at https://kafka.js.org/docs/migration-guide-v2.0.0#producer-new-default-partitioner for details. Silence this warning by setting the environment variable \"KAFKAJS_NO_PARTITIONER_WARNING=1\""}
+🚀 Starting HORNEADO Service...
+
+🔗 Connecting to blockchain...
+📡 RPC URL: http://localhost:8545
+📝 Contract: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+
+✅ Connected as HORNEADOR
+   Address: 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65
+   Balance: 10000.0 ETH
+
+📨 Connecting to Kafka...
+(node:89194) TimeoutNegativeWarning: -1760479639934 is a negative number.
+Timeout duration was set to 1.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Connected to Kafka broker: localhost:9092
+
+👂 Subscribed to topic: molienda-event
+
+⏳ Waiting for messages...
+
+{"level":"INFO","timestamp":"2025-10-14T22:07:19.943Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"horneado-group"}
+{"level":"INFO","timestamp":"2025-10-14T22:07:19.966Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"horneado-group","memberId":"horneado-service-c75ddf1c-b85b-4ec0-aebd-1075731e3820","leaderId":"horneado-service-c75ddf1c-b85b-4ec0-aebd-1075731e3820","isLeader":true,"memberAssignment":{"molienda-event":[0]},"groupProtocol":"RoundRobinAssigner","duration":23}
+
+📨 New message received:
+   Token 1: 7
+   Token 2: 10
+   Type: MOLIENDA
+   Target: HORNEADO
+
+🍞 Creating HORNEADO token with parents [7, 10]...
+
+❌ Error processing message: execution reverted: "Parents must be same type" (action="estimateGas", data="0x08c379a000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000019506172656e7473206d7573742062652073616d65207479706500000000000000", reason="Parents must be same type", transaction={ "data": "0x87e434d20000000000000000000000000000000000000000000000000000000000000007000000000000000000000000000000000000000000000000000000000000000a", "from": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65", "to": "0x5FbDB2315678afecb367f032d93F642f64180aa3" }, invocation=null, revert={ "args": [ "Parents must be same type" ], "name": "Error", "signature": "Error(string)" }, code=CALL_EXCEPTION, version=6.15.0)
+   Reason: Parents must be same type
+
+📨 New message received:
+   Token 1: 9
+   Token 2: 17
+   Type: MOLIENDA
+   Target: HORNEADO
+
+🍞 Creating HORNEADO token with parents [9, 17]...
+
+❌ Error processing message: execution reverted: "Parents must be same type" (action="estimateGas", data="0x08c379a000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000019506172656e7473206d7573742062652073616d65207479706500000000000000", reason="Parents must be same type", transaction={ "data": "0x87e434d200000000000000000000000000000000000000000000000000000000000000090000000000000000000000000000000000000000000000000000000000000011", "from": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65", "to": "0x5FbDB2315678afecb367f032d93F642f64180aa3" }, invocation=null, revert={ "args": [ "Parents must be same type" ], "name": "Error", "signature": "Error(string)" }, code=CALL_EXCEPTION, version=6.15.0)
+   Reason: Parents must be same type
+
+📨 New message received:
+   Token 1: 10
+   Token 2: 17
+   Type: MOLIENDA
+   Target: HORNEADO
+
+🍞 Creating HORNEADO token with parents [10, 17]...
+   Transaction sent: 0xa483178aa0350d5393f36a23f5340913aa97fabd2e0d92c8ed2ee18971ea88c5
+   Waiting for confirmation...
+   ✅ Transaction confirmed in block 21
+
+🎉 HORNEADO token created successfully!
+   Token ID: 18
+   Parent 1: 10
+   Parent 2: 17
+   Gas used: 200901
+
+📤 Published to Kafka:
+   Topic: horneado-event
+   Payload: {
+  tokenId1: 10,
+  tokenId2: 18,
+  tokenType: 'HORNEADO',
+  targetType: 'EMBALAJE',
+  timestamp: 1760479778810
+}
+
+📨 New message received:
+   Token 1: 16
+   Token 2: 25
+   Type: MOLIENDA
+   Target: HORNEADO
+
+🍞 Creating HORNEADO token with parents [16, 25]...
+
+❌ Error processing message: execution reverted: "Parents must be same type" (action="estimateGas", data="0x08c379a000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000019506172656e7473206d7573742062652073616d65207479706500000000000000", reason="Parents must be same type", transaction={ "data": "0x87e434d200000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000019", "from": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65", "to": "0x5FbDB2315678afecb367f032d93F642f64180aa3" }, invocation=null, revert={ "args": [ "Parents must be same type" ], "name": "Error", "signature": "Error(string)" }, code=CALL_EXCEPTION, version=6.15.0)
+   Reason: Parents must be same type

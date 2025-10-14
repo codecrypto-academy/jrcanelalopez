@@ -1,0 +1,62 @@
+{"level":"WARN","timestamp":"2025-10-14T21:10:59.021Z","logger":"kafkajs","message":"KafkaJS v2.0.0 switched default partitioner. To retain the same partitioning behavior as in previous versions, create the producer with the option \"createPartitioner: Partitioners.LegacyPartitioner\". See the migration guide at https://kafka.js.org/docs/migration-guide-v2.0.0#producer-new-default-partitioner for details. Silence this warning by setting the environment variable \"KAFKAJS_NO_PARTITIONER_WARNING=1\""}
+🚀 Starting HORNEADO Service...
+
+🔗 Connecting to blockchain...
+📡 RPC URL: http://localhost:8545
+📝 Contract: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+
+✅ Connected as HORNEADOR
+   Address: 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65
+   Balance: 10000.0 ETH
+
+📨 Connecting to Kafka...
+(node:60053) TimeoutNegativeWarning: -1760476259098 is a negative number.
+Timeout duration was set to 1.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Connected to Kafka broker: localhost:9092
+
+👂 Subscribed to topic: molienda-event
+
+⏳ Waiting for messages...
+
+{"level":"INFO","timestamp":"2025-10-14T21:10:59.109Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"horneado-group"}
+{"level":"INFO","timestamp":"2025-10-14T21:10:59.148Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"horneado-group","memberId":"horneado-service-b0440ca0-1dd1-4721-be07-10f924aead7b","leaderId":"horneado-service-b0440ca0-1dd1-4721-be07-10f924aead7b","isLeader":true,"memberAssignment":{"molienda-event":[0]},"groupProtocol":"RoundRobinAssigner","duration":38}
+
+📨 New message received:
+   Token 1: 33
+   Token 2: 37
+   Type: MOLIENDA
+   Target: HORNEADO
+
+🍞 Creating HORNEADO token with parents [33, 37]...
+
+❌ Error processing message: execution reverted: "Parents must be same type" (action="estimateGas", data="0x08c379a000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000019506172656e7473206d7573742062652073616d65207479706500000000000000", reason="Parents must be same type", transaction={ "data": "0x87e434d200000000000000000000000000000000000000000000000000000000000000210000000000000000000000000000000000000000000000000000000000000025", "from": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65", "to": "0x5FbDB2315678afecb367f032d93F642f64180aa3" }, invocation=null, revert={ "args": [ "Parents must be same type" ], "name": "Error", "signature": "Error(string)" }, code=CALL_EXCEPTION, version=6.15.0)
+   Reason: Parents must be same type
+
+📨 New message received:
+   Token 1: 30
+   Token 2: 37
+   Type: MOLIENDA
+   Target: HORNEADO
+
+🍞 Creating HORNEADO token with parents [30, 37]...
+   Transaction sent: 0x2197c4bd4c7df7fea39e6a170a221201614c263bdfc743371498def095f246e4
+   Waiting for confirmation...
+   ✅ Transaction confirmed in block 41
+
+🎉 HORNEADO token created successfully!
+   Token ID: 38
+   Parent 1: 30
+   Parent 2: 37
+   Gas used: 200901
+{"level":"ERROR","timestamp":"2025-10-14T21:11:13.509Z","logger":"kafkajs","message":"[Connection] Response Metadata(key: 3, version: 6)","broker":"localhost:9092","clientId":"horneado-service","error":"There is no leader for this topic-partition as we are in the middle of a leadership election","correlationId":1,"size":88}
+
+📤 Published to Kafka:
+   Topic: horneado-event
+   Payload: {
+  tokenId1: 30,
+  tokenId2: 38,
+  tokenType: 'HORNEADO',
+  targetType: 'EMBALAJE',
+  timestamp: 1760476273467
+}

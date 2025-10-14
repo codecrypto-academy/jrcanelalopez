@@ -1,0 +1,174 @@
+{"level":"WARN","timestamp":"2025-10-14T22:07:12.703Z","logger":"kafkajs","message":"KafkaJS v2.0.0 switched default partitioner. To retain the same partitioning behavior as in previous versions, create the producer with the option \"createPartitioner: Partitioners.LegacyPartitioner\". See the migration guide at https://kafka.js.org/docs/migration-guide-v2.0.0#producer-new-default-partitioner for details. Silence this warning by setting the environment variable \"KAFKAJS_NO_PARTITIONER_WARNING=1\""}
+🚀 Starting MOLIENDA Service...
+
+🔗 Connecting to blockchain...
+📡 RPC URL: http://localhost:8545
+📝 Contract: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+
+✅ Connected as MOLINERO
+   Address: 0x90F79bf6EB2c4f870365E785982E1f101E93b906
+   Balance: 10000.0 ETH
+
+📨 Connecting to Kafka...
+(node:88853) TimeoutNegativeWarning: -1760479632773 is a negative number.
+Timeout duration was set to 1.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Connected to Kafka broker: localhost:9092
+
+👂 Subscribed to topic: almacen-event
+
+⏳ Waiting for messages...
+
+{"level":"INFO","timestamp":"2025-10-14T22:07:12.785Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"molienda-group"}
+{"level":"INFO","timestamp":"2025-10-14T22:07:12.808Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"molienda-group","memberId":"molienda-service-dcd5ebd5-917f-4da8-9233-8e4d5461e752","leaderId":"molienda-service-dcd5ebd5-917f-4da8-9233-8e4d5461e752","isLeader":true,"memberAssignment":{"almacen-event":[0]},"groupProtocol":"RoundRobinAssigner","duration":23}
+
+📨 New message received:
+   Token 1: undefined
+   Token 2: undefined
+   Type: ALMACEN
+   Target: MOLIENDA
+
+� Creating MOLIENDA token with parents [undefined, undefined]...
+
+❌ Error processing message: Cannot read properties of undefined (reading 'then')
+
+📨 New message received:
+   Token 1: undefined
+   Token 2: undefined
+   Type: ALMACEN
+   Target: MOLIENDA
+
+� Creating MOLIENDA token with parents [undefined, undefined]...
+
+❌ Error processing message: Cannot read properties of undefined (reading 'then')
+
+📨 New message received:
+   Token 1: 7
+   Token 2: 8
+   Type: ALMACEN
+   Target: MOLIENDA
+
+� Creating MOLIENDA token with parents [7, 8]...
+   Transaction sent: 0x20399b611637e3b10da8eb2f39a7c1f8bc1e6307c62a9193f93e5070c0e96d05
+   Waiting for confirmation...
+   ✅ Transaction confirmed in block 13
+
+🎉 MOLIENDA token created successfully!
+   Token ID: 10
+   Parent 1: 7
+   Parent 2: 8
+   Gas used: 200826
+
+📤 Published to Kafka:
+   Topic: molienda-event
+   Payload: {
+  tokenId1: 7,
+  tokenId2: 10,
+  tokenType: 'MOLIENDA',
+  targetType: 'HORNEADO',
+  timestamp: 1760479700802
+}
+
+📨 New message received:
+   Token 1: undefined
+   Token 2: undefined
+   Type: ALMACEN
+   Target: MOLIENDA
+
+� Creating MOLIENDA token with parents [undefined, undefined]...
+
+❌ Error processing message: Cannot read properties of undefined (reading 'then')
+
+📨 New message received:
+   Token 1: undefined
+   Token 2: undefined
+   Type: ALMACEN
+   Target: MOLIENDA
+
+� Creating MOLIENDA token with parents [undefined, undefined]...
+
+❌ Error processing message: Cannot read properties of undefined (reading 'then')
+
+📨 New message received:
+   Token 1: 9
+   Token 2: 15
+   Type: ALMACEN
+   Target: MOLIENDA
+
+� Creating MOLIENDA token with parents [9, 15]...
+   Transaction sent: 0x63bb601bd23596dad6abcbd1e88f8dd92d51396b8672b754925a99ef2090dba4
+   Waiting for confirmation...
+   ✅ Transaction confirmed in block 20
+
+🎉 MOLIENDA token created successfully!
+   Token ID: 17
+   Parent 1: 9
+   Parent 2: 15
+   Gas used: 183726
+
+📤 Published to Kafka:
+   Topic: molienda-event
+   Payload: {
+  tokenId1: 9,
+  tokenId2: 17,
+  tokenType: 'MOLIENDA',
+  targetType: 'HORNEADO',
+  timestamp: 1760479777782
+}
+
+📨 New message received:
+   Token 1: undefined
+   Token 2: undefined
+   Type: ALMACEN
+   Target: MOLIENDA
+
+� Creating MOLIENDA token with parents [undefined, undefined]...
+
+❌ Error processing message: Cannot read properties of undefined (reading 'then')
+
+📨 New message received:
+   Token 1: undefined
+   Token 2: undefined
+   Type: ALMACEN
+   Target: MOLIENDA
+
+� Creating MOLIENDA token with parents [undefined, undefined]...
+
+❌ Error processing message: Cannot read properties of undefined (reading 'then')
+
+📨 New message received:
+   Token 1: 16
+   Token 2: 23
+   Type: ALMACEN
+   Target: MOLIENDA
+
+� Creating MOLIENDA token with parents [16, 23]...
+   Transaction sent: 0x95563e9a279e177328a8ea834163b1310e5039a54ea73d2acf5785c300cfc687
+   Waiting for confirmation...
+   ✅ Transaction confirmed in block 28
+
+🎉 MOLIENDA token created successfully!
+   Token ID: 25
+   Parent 1: 16
+   Parent 2: 23
+   Gas used: 183726
+
+📤 Published to Kafka:
+   Topic: molienda-event
+   Payload: {
+  tokenId1: 16,
+  tokenId2: 25,
+  tokenType: 'MOLIENDA',
+  targetType: 'HORNEADO',
+  timestamp: 1760479943823
+}
+
+📨 New message received:
+   Token 1: undefined
+   Token 2: undefined
+   Type: ALMACEN
+   Target: MOLIENDA
+
+� Creating MOLIENDA token with parents [undefined, undefined]...
+
+❌ Error processing message: Cannot read properties of undefined (reading 'then')

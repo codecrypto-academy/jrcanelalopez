@@ -1,0 +1,34 @@
+{"level":"WARN","timestamp":"2025-10-14T22:07:31.559Z","logger":"kafkajs","message":"KafkaJS v2.0.0 switched default partitioner. To retain the same partitioning behavior as in previous versions, create the producer with the option \"createPartitioner: Partitioners.LegacyPartitioner\". See the migration guide at https://kafka.js.org/docs/migration-guide-v2.0.0#producer-new-default-partitioner for details. Silence this warning by setting the environment variable \"KAFKAJS_NO_PARTITIONER_WARNING=1\""}
+🚀 Starting EMBALAJE Service...
+
+🔗 Connecting to blockchain...
+📡 RPC URL: http://localhost:8545
+📝 Contract: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+
+✅ Connected as EMBALADOR
+   Address: 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc
+   Balance: 10000.0 ETH
+
+📨 Connecting to Kafka...
+(node:89549) TimeoutNegativeWarning: -1760479651632 is a negative number.
+Timeout duration was set to 1.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Connected to Kafka broker: localhost:9092
+
+👂 Subscribed to topic: horneado-event
+
+⏳ Waiting for messages...
+
+{"level":"INFO","timestamp":"2025-10-14T22:07:31.640Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"embalaje-group"}
+{"level":"INFO","timestamp":"2025-10-14T22:07:31.656Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"embalaje-group","memberId":"embalaje-service-2fdf7e8a-d408-45b4-8ea7-982cce77100b","leaderId":"embalaje-service-2fdf7e8a-d408-45b4-8ea7-982cce77100b","isLeader":true,"memberAssignment":{"horneado-event":[0]},"groupProtocol":"RoundRobinAssigner","duration":16}
+
+📨 New message received:
+   Token 1: 10
+   Token 2: 18
+   Type: HORNEADO
+   Target: EMBALAJE
+
+📦 Creating EMBALAJE token with parents [10, 18]...
+
+❌ Error processing message: execution reverted: "Parents must be same type" (action="estimateGas", data="0x08c379a000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000019506172656e7473206d7573742062652073616d65207479706500000000000000", reason="Parents must be same type", transaction={ "data": "0x87e434d2000000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000012", "from": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc", "to": "0x5FbDB2315678afecb367f032d93F642f64180aa3" }, invocation=null, revert={ "args": [ "Parents must be same type" ], "name": "Error", "signature": "Error(string)" }, code=CALL_EXCEPTION, version=6.15.0)
+   Reason: Parents must be same type

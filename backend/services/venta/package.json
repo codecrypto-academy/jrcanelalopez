@@ -1,0 +1,26 @@
+{
+  "name": "venta-service",
+  "version": "1.0.0",
+  "description": "VENTA service - Final service: Consumes DISTRIBUCION events from Kafka and creates VENTA tokens",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "blockchain",
+    "supply-chain",
+    "kafka",
+    "venta"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ethers": "^6.9.0",
+    "kafkajs": "^2.0.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

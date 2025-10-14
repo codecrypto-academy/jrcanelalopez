@@ -1,0 +1,23 @@
+{"level":"WARN","timestamp":"2025-10-14T22:07:41.487Z","logger":"kafkajs","message":"KafkaJS v2.0.0 switched default partitioner. To retain the same partitioning behavior as in previous versions, create the producer with the option \"createPartitioner: Partitioners.LegacyPartitioner\". See the migration guide at https://kafka.js.org/docs/migration-guide-v2.0.0#producer-new-default-partitioner for details. Silence this warning by setting the environment variable \"KAFKAJS_NO_PARTITIONER_WARNING=1\""}
+🚀 Starting DISTRIBUCION Service...
+
+🔗 Connecting to blockchain...
+📡 RPC URL: http://localhost:8545
+📝 Contract: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+
+✅ Connected as DISTRIBUIDOR
+   Address: 0x976EA74026E726554dB657fA54763abd0C3a0aa9
+   Balance: 10000.0 ETH
+
+📨 Connecting to Kafka...
+(node:89902) TimeoutNegativeWarning: -1760479661557 is a negative number.
+Timeout duration was set to 1.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Connected to Kafka broker: localhost:9092
+
+👂 Subscribed to topic: embalaje-event
+
+⏳ Waiting for messages...
+
+{"level":"INFO","timestamp":"2025-10-14T22:07:41.565Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"distribucion-group"}
+{"level":"INFO","timestamp":"2025-10-14T22:07:41.584Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"distribucion-group","memberId":"distribucion-service-3933138b-3ee9-40a8-bc72-cd81c7b94726","leaderId":"distribucion-service-3933138b-3ee9-40a8-bc72-cd81c7b94726","isLeader":true,"memberAssignment":{"embalaje-event":[0]},"groupProtocol":"RoundRobinAssigner","duration":19}
