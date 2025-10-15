@@ -1,0 +1,36 @@
+# Deployments Directory
+
+Este directorio contiene las direcciones de los contratos desplegados en diferentes redes.
+
+## Estructura de Archivos
+
+- `local.json` - Deployment local con Anvil
+- `sepolia.json` - Deployment en Sepolia testnet
+- `mainnet.json` - Deployment en Ethereum mainnet
+- `addresses.json` - Generado automáticamente por el script de deployment
+
+## Formato de Archivo
+
+```json
+{
+  "DAOToken": "0x...",
+  "TimelockController": "0x...",
+  "CodeCryptoDAOGovernor": "0x...",
+  "ProposalImplementation": "0x...",
+  "ProposalFactory": "0x...",
+  "Shareholder1": "0x..." // Solo en local
+}
+```
+
+## Uso
+
+Estos archivos son utilizados por:
+
+- Frontend (React/Next.js) para conectarse a los contratos
+- Scripts de interacción
+- Tests de integración
+- Herramientas de monitoring
+
+## Nota
+
+**NUNCA** commitear estos archivos si contienen direcciones de mainnet hasta que estén verificadas y auditadas.
