@@ -1,0 +1,111 @@
+# ============ Foundry (Smart Contracts) ============
+
+# Build artifacts
+sc/out/
+sc/cache/
+sc/broadcast/
+
+# Dependencies
+sc/lib/
+
+# Foundry cache
+sc/.forge-snapshots/
+
+# Environment variables
+sc/.env
+sc/.env.local
+
+# Node.js dependencies
+sc/cache/
+sc/lib/
+sc/out/
+
+# ============ Next.js (Frontend) ============
+
+# Dependencies
+web/node_modules/
+web/.pnp
+web/.pnp.js
+
+# Testing
+web/coverage
+
+# Next.js
+web/.next/
+web/out/
+web/build
+
+# Production
+web/dist
+
+# Debug
+web/npm-debug.log*
+web/yarn-debug.log*
+web/yarn-error.log*
+
+# Environment
+web/.env
+web/.env*.local
+
+# Vercel
+web/.vercel
+
+# Typescript
+web/*.tsbuildinfo
+web/next-env.d.ts
+
+# ============ IDE and OS ============
+
+# VSCode
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# IntelliJ
+.idea/
+*.iml
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# ============ Logs ============
+
+*.log
+logs/
+*.log.*
+
+# ============ Temporary files ============
+
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# ============ Security ============
+
+# Private keys (IMPORTANT!)
+*.key
+*.pem
+private/
+secrets/
+
+# ============ Claude Code (opcional) ============
+
+# Mantener en repo:
+# .claude/commands/
+# .claude/agents/*.md
+# .claude/hooks/
+
+# Sessions pueden ser privadas si contienen info sensible
+.claude/sessions/
+.claude/agents/usage-log.json
