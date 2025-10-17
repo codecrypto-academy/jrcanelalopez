@@ -1,0 +1,40 @@
+{
+  "name": "@javierruiz/mcp-foundry",
+  "version": "1.0.0",
+  "description": "MCP server for Foundry CLI tools (anvil, cast, forge)",
+  "type": "module",
+  "bin": {
+    "mcp-foundry": "./build/index.js"
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc && chmod +x build/index.js",
+    "watch": "tsc --watch",
+    "prepare": "npm run build",
+    "inspector": "npx @modelcontextprotocol/inspector node build/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "foundry",
+    "ethereum",
+    "solidity",
+    "anvil",
+    "cast",
+    "forge",
+    "blockchain"
+  ],
+  "author": "Javier Ruiz-Canela",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
