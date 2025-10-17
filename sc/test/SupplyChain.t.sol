@@ -23,6 +23,8 @@ contract SupplyChainTest is Test {
     event TransferRejected(uint256 indexed transferId);
     event UserRoleRequested(address indexed user, string role);
     event UserStatusChanged(address indexed user, SupplyChain.UserStatus status);
+    event ContractPaused(address indexed by);
+    event ContractUnpaused(address indexed by);
 
     function setUp() public {
         // Deploy contract as admin
@@ -94,8 +96,8 @@ contract SupplyChainTest is Test {
         vm.prank(producer);
         supplyChain.requestUserRole("Producer");
 
-        // Non-admin tries to approve
-        vm.expectRevert(SupplyChain.OnlyAdmin.selector);
+        // Non-admin tries to approve - should revert with OwnableUnauthorizedAccount
+        vm.expectRevert(abi.encodeWithSignature("OwnableUnauthorizedAccount(address)", factory));
         vm.prank(factory);
         supplyChain.changeStatusUser(producer, SupplyChain.UserStatus.Approved);
     }
@@ -367,6 +369,143 @@ contract SupplyChainTest is Test {
         assertEq(producerTransfers.length, 1, "Producer should have 1 transfer");
         assertEq(factoryTransfers.length, 1, "Factory should have 1 transfer");
         assertEq(producerTransfers[0], 1, "Transfer ID should be 1");
+    }
+
+    // ============ Pause/Unpause Tests ============
+
+    function testPauseContract() public {
+        vm.prank(admin);
+        supplyChain.pause();
+
+        assertTrue(supplyChain.isPaused(), "Contract should be paused");
+    }
+
+    function testUnpauseContract() public {
+        vm.prank(admin);
+        supplyChain.pause();
+
+        vm.prank(admin);
+        supplyChain.unpause();
+
+        assertFalse(supplyChain.isPaused(), "Contract should be unpaused");
+    }
+
+    function testOnlyOwnerCanPause() public {
+        vm.expectRevert(abi.encodeWithSignature("OwnableUnauthorizedAccount(address)", producer));
+        vm.prank(producer);
+        supplyChain.pause();
+    }
+
+    function testOnlyOwnerCanUnpause() public {
+        vm.prank(admin);
+        supplyChain.pause();
+
+        vm.expectRevert(abi.encodeWithSignature("OwnableUnauthorizedAccount(address)", producer));
+        vm.prank(producer);
+        supplyChain.unpause();
+    }
+
+    function testCannotRegisterWhenPaused() public {
+        vm.prank(admin);
+        supplyChain.pause();
+
+        vm.expectRevert(abi.encodeWithSignature("EnforcedPause()"));
+        vm.prank(producer);
+        supplyChain.requestUserRole("Producer");
+    }
+
+    function testCannotCreateTokenWhenPaused() public {
+        _registerAndApprove(producer, "Producer");
+
+        vm.prank(admin);
+        supplyChain.pause();
+
+        vm.expectRevert(abi.encodeWithSignature("EnforcedPause()"));
+        vm.prank(producer);
+        supplyChain.createToken("Token", 100, "{}", 0);
+    }
+
+    function testCannotTransferWhenPaused() public {
+        _registerAndApprove(producer, "Producer");
+        _registerAndApprove(factory, "Factory");
+
+        uint256 tokenId = _createToken(producer, "Raw", 1000, 0);
+
+        vm.prank(admin);
+        supplyChain.pause();
+
+        vm.expectRevert(abi.encodeWithSignature("EnforcedPause()"));
+        vm.prank(producer);
+        supplyChain.transfer(factory, tokenId, 500);
+    }
+
+    function testCannotAcceptTransferWhenPaused() public {
+        _registerAndApprove(producer, "Producer");
+        _registerAndApprove(factory, "Factory");
+
+        uint256 tokenId = _createToken(producer, "Raw", 1000, 0);
+
+        vm.prank(producer);
+        supplyChain.transfer(factory, tokenId, 500);
+
+        vm.prank(admin);
+        supplyChain.pause();
+
+        vm.expectRevert(abi.encodeWithSignature("EnforcedPause()"));
+        vm.prank(factory);
+        supplyChain.acceptTransfer(1);
+    }
+
+    function testCannotRejectTransferWhenPaused() public {
+        _registerAndApprove(producer, "Producer");
+        _registerAndApprove(factory, "Factory");
+
+        uint256 tokenId = _createToken(producer, "Raw", 1000, 0);
+
+        vm.prank(producer);
+        supplyChain.transfer(factory, tokenId, 500);
+
+        vm.prank(admin);
+        supplyChain.pause();
+
+        vm.expectRevert(abi.encodeWithSignature("EnforcedPause()"));
+        vm.prank(factory);
+        supplyChain.rejectTransfer(1);
+    }
+
+    function testReadOperationsWorkWhenPaused() public {
+        _registerAndApprove(producer, "Producer");
+        uint256 tokenId = _createToken(producer, "Raw", 1000, 0);
+
+        vm.prank(admin);
+        supplyChain.pause();
+
+        // These should all work
+        supplyChain.getUserInfo(producer);
+        supplyChain.getToken(tokenId);
+        supplyChain.getTokenBalance(tokenId, producer);
+        supplyChain.getUserTokens(producer);
+        supplyChain.isAdmin(admin);
+        supplyChain.isPaused();
+    }
+
+    function testPauseEmitsEvent() public {
+        vm.expectEmit(true, false, false, false);
+        emit ContractPaused(admin);
+
+        vm.prank(admin);
+        supplyChain.pause();
+    }
+
+    function testUnpauseEmitsEvent() public {
+        vm.prank(admin);
+        supplyChain.pause();
+
+        vm.expectEmit(true, false, false, false);
+        emit ContractUnpaused(admin);
+
+        vm.prank(admin);
+        supplyChain.unpause();
     }
 
     // ============ Complete Flow Test ============

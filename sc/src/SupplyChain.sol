@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
+
 /// @title Supply Chain Tracker Contract
 /// @author Supply Chain Team
 /// @notice Manages traceability in supply chains using blockchain
-/// @dev Implements role-based access control and token system for tracking
-contract SupplyChain {
+/// @dev Implements role-based access control and token system for tracking with pausable functionality
+contract SupplyChain is Ownable, Pausable {
     // ============ Enums ============
 
     /// @notice User status in the system
@@ -58,9 +61,6 @@ contract SupplyChain {
 
     // ============ State Variables ============
 
-    /// @notice Contract administrator (deployer)
-    address public admin;
-
     /// @notice Counters for IDs
     uint256 public nextTokenId = 1;
     uint256 public nextTransferId = 1;
@@ -109,11 +109,16 @@ contract SupplyChain {
     /// @notice Emitted when user status changes
     event UserStatusChanged(address indexed user, UserStatus status);
 
+    /// @notice Emitted when contract is paused
+    event ContractPaused(address indexed by);
+
+    /// @notice Emitted when contract is unpaused
+    event ContractUnpaused(address indexed by);
+
     // ============ Custom Errors ============
 
     error UserNotApproved();
     error InvalidParentId();
-    error OnlyAdmin();
     error UserAlreadyRegistered();
     error InvalidRole();
     error InsufficientBalance();
@@ -127,12 +132,6 @@ contract SupplyChain {
 
     // ============ Modifiers ============
 
-    /// @notice Only contract admin can call
-    modifier onlyAdmin() {
-        if (msg.sender != admin) revert OnlyAdmin();
-        _;
-    }
-
     /// @notice Only approved users can call
     modifier onlyApproved() {
         uint256 userId = addressToUserId[msg.sender];
@@ -144,17 +143,15 @@ contract SupplyChain {
 
     // ============ Constructor ============
 
-    /// @notice Initialize contract with deployer as admin
-    constructor() {
-        admin = msg.sender;
-    }
+    /// @notice Initialize contract with deployer as owner
+    constructor() Ownable(msg.sender) Pausable() {}
 
     // ============ User Management Functions ============
 
     /// @notice Request a role in the system
     /// @dev Creates user with Pending status, awaiting admin approval
     /// @param role Role to request: "Producer", "Factory", "Retailer", or "Consumer"
-    function requestUserRole(string calldata role) external {
+    function requestUserRole(string calldata role) external whenNotPaused {
         if (addressToUserId[msg.sender] != 0) revert UserAlreadyRegistered();
 
         // Validate role
@@ -181,10 +178,10 @@ contract SupplyChain {
         emit UserRoleRequested(msg.sender, role);
     }
 
-    /// @notice Change user status (admin only)
+    /// @notice Change user status (owner only)
     /// @param userAddress Address of the user
     /// @param newStatus New status to set
-    function changeStatusUser(address userAddress, UserStatus newStatus) external onlyAdmin {
+    function changeStatusUser(address userAddress, UserStatus newStatus) external onlyOwner {
         if (userAddress == address(0)) revert InvalidAddress();
 
         uint256 userId = addressToUserId[userAddress];
@@ -205,11 +202,11 @@ contract SupplyChain {
         return users[userId];
     }
 
-    /// @notice Check if address is admin
+    /// @notice Check if address is owner/admin
     /// @param userAddress Address to check
-    /// @return True if address is admin
+    /// @return True if address is owner
     function isAdmin(address userAddress) external view returns (bool) {
-        return userAddress == admin;
+        return userAddress == owner();
     }
 
     // ============ Token Management Functions ============
@@ -226,7 +223,7 @@ contract SupplyChain {
         uint256 totalSupply,
         string calldata features,
         uint256 parentId
-    ) external onlyApproved returns (uint256) {
+    ) external onlyApproved whenNotPaused returns (uint256) {
         if (totalSupply == 0) revert InvalidAmount();
 
         uint256 userId = addressToUserId[msg.sender];
@@ -313,7 +310,7 @@ contract SupplyChain {
     /// @param to Recipient address
     /// @param tokenId Token ID to transfer
     /// @param amount Amount to transfer
-    function transfer(address to, uint256 tokenId, uint256 amount) external onlyApproved {
+    function transfer(address to, uint256 tokenId, uint256 amount) external onlyApproved whenNotPaused {
         if (to == address(0) || to == msg.sender) revert InvalidAddress();
         if (amount == 0) revert InvalidAmount();
         if (tokenId == 0 || tokenId >= nextTokenId) revert TokenDoesNotExist();
@@ -352,7 +349,7 @@ contract SupplyChain {
 
     /// @notice Accept a pending transfer
     /// @param transferId ID of the transfer
-    function acceptTransfer(uint256 transferId) external {
+    function acceptTransfer(uint256 transferId) external whenNotPaused {
         if (transferId == 0 || transferId >= nextTransferId) revert TransferDoesNotExist();
 
         Transfer storage t = transfers[transferId];
@@ -376,7 +373,7 @@ contract SupplyChain {
 
     /// @notice Reject a pending transfer
     /// @param transferId ID of the transfer
-    function rejectTransfer(uint256 transferId) external {
+    function rejectTransfer(uint256 transferId) external whenNotPaused {
         if (transferId == 0 || transferId >= nextTransferId) revert TransferDoesNotExist();
 
         Transfer storage t = transfers[transferId];
@@ -402,6 +399,28 @@ contract SupplyChain {
     /// @return Array of transfer IDs
     function getUserTransfers(address userAddress) external view returns (uint256[] memory) {
         return userTransfers[userAddress];
+    }
+
+    // ============ Admin/Emergency Functions ============
+
+    /// @notice Pause the contract - stops all critical operations
+    /// @dev Only owner can pause. Used in emergency situations
+    function pause() external onlyOwner {
+        _pause();
+        emit ContractPaused(msg.sender);
+    }
+
+    /// @notice Unpause the contract - resumes all operations
+    /// @dev Only owner can unpause
+    function unpause() external onlyOwner {
+        _unpause();
+        emit ContractUnpaused(msg.sender);
+    }
+
+    /// @notice Check if contract is currently paused
+    /// @return True if paused, false otherwise
+    function isPaused() external view returns (bool) {
+        return paused();
     }
 
     // ============ Internal Functions ============

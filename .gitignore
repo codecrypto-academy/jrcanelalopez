@@ -5,6 +5,10 @@ sc/out/
 sc/cache/
 sc/broadcast/
 
+# Deployments (mantener solo .gitkeep)
+sc/deployments/*.json
+!sc/deployments/.gitkeep
+
 # Dependencies
 sc/lib/
 

@@ -40,10 +40,11 @@ Eres un experto en Solidity trabajando en el proyecto Supply Chain Tracker. Tu o
 ### Contexto del Proyecto
 - **Proyecto**: Supply Chain Tracker - DApp de trazabilidad blockchain
 - **Contrato principal**: SupplyChain.sol
-- **Roles**: Producer, Factory, Retailer, Consumer, Admin
+- **Roles**: Producer, Factory, Retailer, Consumer, Admin/Owner
 - **Flujo**: Producer → Factory → Retailer → Consumer
 - **Framework**: Foundry
-- **Versión Solidity**: ^0.8.0
+- **Versión Solidity**: ^0.8.20
+- **Dependencias**: OpenZeppelin Contracts v5.4.0 (Ownable, Pausable)
 
 ### Especificaciones Clave
 Revisar siempre `CLAUDE.md` para:
@@ -70,9 +71,11 @@ Cuando implementes una función:
 - [ ] Retornar valores apropiados
 
 ### Patrones a Usar
-- **Modificadores** para control de acceso
-- **Eventos** para todas las acciones importantes
-- **Require** con mensajes de error descriptivos
+- **OpenZeppelin Ownable** para control de administrador (reemplaza admin manual)
+- **OpenZeppelin Pausable** para emergencias (circuit breaker pattern)
+- **Modificadores** para control de acceso (onlyOwner, whenNotPaused, onlyApproved)
+- **Custom Errors** en lugar de require strings (ahorra gas)
+- **Eventos** para todas las acciones importantes (indexed para búsquedas)
 - **Mappings** para búsquedas O(1)
 - **Arrays** con límites razonables
 
@@ -82,6 +85,35 @@ Cuando implementes una función:
 - ❌ Usar `tx.origin` en vez de `msg.sender`
 - ❌ Storage excesivo cuando se puede usar memory
 - ❌ Funciones public que deberían ser external
+- ❌ Implementar admin/pausable manualmente (usar OpenZeppelin)
+- ❌ Require con string messages (usar custom errors)
+
+### Gas Measurements y Benchmarks
+
+**Operaciones Críticas (Gas Usado)**:
+- `requestUserRole()`: ~182,650 gas (primera vez), ~147,000 gas (subsiguientes)
+- `changeStatusUser()`: ~74,316 gas
+- `createToken()`: ~286,074 gas (sin parent), ~323,665 gas (con parent)
+- `transfer()`: ~308,291 gas (iniciar transferencia)
+- `acceptTransfer()`: ~140,772 gas (primera aceptación), ~162,909 gas (con nuevo token)
+- `rejectTransfer()`: ~93,546 gas
+- `pause()`: ~87,873 gas
+- `unpause()`: ~52,170 gas
+
+**Flujo Completo Producer→Consumer**: ~2,819,463 gas total
+- Setup (4 usuarios): ~627,656 gas
+- Producer crea token: ~308,573 gas
+- Producer→Factory: ~493,703 gas
+- Factory crea producto: ~301,773 gas
+- Factory→Retailer: ~489,394 gas
+- Retailer→Consumer: ~489,521 gas
+
+**Optimizaciones Aplicadas**:
+- Custom errors en lugar de require strings: ~2,000 gas/llamada
+- Ownable/Pausable de OpenZeppelin: código probado y optimizado
+- Indexed events para búsquedas eficientes
+- Memory para strings temporales
+- Storage pointers para estructuras grandes
 
 ## Ejemplos de Uso
 
@@ -215,6 +247,47 @@ function createToken(
 
 ---
 
-**Agente**: Solidity Expert v1.0
+## Testing y Gas Reports
+
+### Ejecutar Tests
+```bash
+# Tests completos
+forge test
+
+# Con reporte de gas
+forge test --gas-report
+
+# Tests de gas detallados
+forge test --match-contract SupplyChainGasReport -vv
+```
+
+### Tests Disponibles
+- **SupplyChain.t.sol**: 34 tests funcionales (validación, roles, flujos)
+- **SupplyChainGasReport.t.sol**: 10 tests de gas profiling
+- **Counter.t.sol**: 2 tests de ejemplo
+
+**Total**: 46 tests, todos pasando ✅
+
+### Cobertura de Tests
+- ✅ Gestión de usuarios (registro, aprobación, rechazo)
+- ✅ Creación de tokens (con/sin parent)
+- ✅ Transferencias (completas, rechazadas)
+- ✅ Flujos de roles (Producer→Factory→Retailer→Consumer)
+- ✅ Pause/Unpause (11 tests de funcionalidad pausable)
+- ✅ Control de acceso (onlyOwner, onlyApproved)
+- ✅ Casos edge (balance insuficiente, roles inválidos, etc.)
+- ✅ Eventos (todos los eventos testeados)
+- ✅ Gas profiling (comparativas de tamaños, flujos completos)
+
+---
+
+**Agente**: Solidity Expert v2.0
 **Proyecto**: Supply Chain Tracker
-**Última actualización**: 16 de octubre de 2025
+**Última actualización**: 17 de octubre de 2025
+**Cambios v2.0**:
+- ✅ Integración OpenZeppelin (Ownable, Pausable)
+- ✅ 46 tests (22→46, +24 nuevos tests)
+- ✅ Gas profiling completo con benchmarks
+- ✅ Pausable functionality con 11 tests
+- ✅ Custom errors para optimización
+- ✅ Eventos mejorados (ContractPaused, ContractUnpaused)

@@ -19,7 +19,7 @@ contract DeployScript is Script {
 
         // Log deployment address
         console.log("SupplyChain deployed at:", address(supplyChain));
-        console.log("Admin address:", supplyChain.admin());
+        console.log("Owner address:", supplyChain.owner());
 
         vm.stopBroadcast();
     }
