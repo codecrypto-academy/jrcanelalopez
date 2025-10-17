@@ -13,6 +13,7 @@
 > **Ver detalles completos de cada sesión en**: `.claude/sessions/`
 
 ### Fase 0: Configuración y Documentación (16/10/2025)
+### Fase 1: Desarrollo y Testing del MCP Foundry (17/10/2025)
 
 #### Sesión 1: Configuración Completa del Proyecto
 - **Archivo**: [session-2025-10-16-19-14.md](.claude/sessions/session-2025-10-16-19-14.md)
@@ -98,6 +99,51 @@
 - Sesión 2: Network error en forge-std install (resuelto con retry)
 - Sesión 2: NatSpec documentation error (resuelto con @return individuales)
 
+#### Sesión 3: Desarrollo y Testing del MCP Foundry
+- **Archivo**: [session-2025-10-17-mcp-foundry.md](.claude/sessions/session-2025-10-17-mcp-foundry.md)
+- **Inicio**: 18:10
+- **Fin**: 20:30
+- **Duración**: ~140 minutos (2h 20min)
+- **Actividad**: Probar MCP Foundry existente, identificar y arreglar bugs críticos (timeout y shell interpretation)
+
+**Tareas realizadas:**
+1. ✅ Testing del MCP Inspector (navegador web)
+2. ✅ Identificación de bug crítico: `shell: true` interpretaba paréntesis
+3. ✅ Fix de `cast_call`: Cambio de `shell: true` a `shell: false`
+4. ✅ Aumento de timeout de `forge_script`: 5 min → 15 min
+5. ✅ Aumento de timeout default: 2 min → 15 min
+6. ✅ Setup de ambiente de prueba (Anvil + deployment)
+7. ✅ Creación de script de prueba `test-cast-call.js`
+8. ✅ Validación con firmas complejas: `isAdmin(address)(bool)`, `paused()(bool)`
+9. ✅ Documentación completa de bugs y soluciones
+10. ✅ Recompilación y reinicio del MCP Inspector
+
+**Archivos modificados**: 2 archivos TypeScript
+- `mcp-foundry/src/foundry-executor.ts` (3 cambios)
+- `mcp-foundry/src/tool-handlers.ts` (1 cambio)
+
+**Archivos creados**: 1 script de prueba
+- `mcp-foundry/test-cast-call.js`
+
+**Bugs resueltos**: 2 críticos
+1. ⚠️ **forge_script timeout**: 5 min → 15 min
+2. 🔴 **cast_call shell interpretation**: `shell: true` → `shell: false`
+
+**Resultado:**
+- ✅ MCP Foundry funcionando correctamente
+- ✅ Todas las firmas de función con paréntesis funcionan
+- ✅ Deployments largos soportados (15 min timeout)
+- ✅ Testing validado con múltiples casos
+
+**Tokens utilizados**: ~73,000 tokens
+
+**Interacciones con IA**: 5
+- Testing inicial del MCP
+- Debugging timeout
+- Debugging shell interpretation
+- Setup y validación
+- Diagnóstico de error de usuario
+
 ---
 
 ## 3. Tiempo Consumido por Componente
@@ -130,16 +176,21 @@
 - **Configuración Git y push**: 3 minutos (Sesión 2)
 - **Total Git**: 10 minutos
 
-### Construcción de MCP (Pendiente)
-- **Análisis de CLI Foundry**: Pendiente
-- **Implementación MCP**: Pendiente
-- **Total MCP**: 0 minutos
+### Construcción de MCP
+- **Testing del MCP Inspector**: 5 minutos (Sesión 3)
+- **Debugging timeout**: 20 minutos (Sesión 3)
+- **Debugging shell interpretation**: 30 minutos (Sesión 3)
+- **Setup ambiente de prueba**: 15 minutos (Sesión 3)
+- **Testing y validación**: 25 minutos (Sesión 3)
+- **Documentación**: 45 minutos (Sesión 3)
+- **Total MCP**: 140 minutos (2h 20min)
 
-### TOTAL ACUMULADO: 220 minutos (3 horas 40 minutos)
+### TOTAL ACUMULADO: 360 minutos (6 horas)
 
 **Desglose por Sesión:**
 - Sesión 1: 10 minutos (configuración inicial)
 - Sesión 2: 210 minutos (hooks, agentes, smart contract, git)
+- Sesión 3: 140 minutos (MCP testing y debugging)
 
 ---
 
@@ -305,8 +356,15 @@ Cada sesión incluye:
   - Tests: ~20,000
   - Git setup: ~7,000
   - Debugging y fixes: ~5,000
-- **Actualización IA.md y session**: ~5,000 tokens
-- **Total acumulado**: ~160,000 tokens
+- **Sesión 3 - MCP Testing y Debugging**: ~73,000 tokens
+  - Lectura archivos MCP: ~8,000
+  - Debugging y fixes: ~15,000
+  - Setup y deployment: ~12,000
+  - Testing: ~10,000
+  - Diagnóstico de errores: ~8,000
+  - Documentación: ~20,000
+- **Actualización IA.md y sessions**: ~25,000 tokens
+- **Total acumulado**: ~253,000 tokens
 
 ### Ratio de Éxito
 - **Tareas completadas correctamente**: 23/25 (92%)
@@ -347,12 +405,12 @@ Cada sesión incluye:
 - ✅ **Configuración (100%)**: CLAUDE.md, comandos, hooks, agentes, tracking
 - ✅ **Smart Contract (100%)**: SupplyChain.sol implementado, 22/22 tests pasando
 - ✅ **Git Repository (100%)**: Configurado y código subido
+- ✅ **MCP Foundry (100%)**: Implementado, testeado, 2 bugs críticos resueltos
 - ⬜ **Frontend (0%)**: Pendiente inicialización Next.js
-- ⬜ **MCP (0%)**: Pendiente diseño
 - ⬜ **Deploy (0%)**: Pendiente deploy en Anvil
 - ⬜ **Integración Web3 (0%)**: Pendiente
 
-### Progreso Total: 55%
+### Progreso Total: 65%
 
 **Componentes completados:**
 - ✅ Documentación completa (CLAUDE.md, AGENTS.md, IA.md)
@@ -374,6 +432,15 @@ Cada sesión incluye:
 
 ---
 
-**Última actualización**: 16 de octubre de 2025, 22:34
+**Componentes completados (Sesión 3)**:
+- ✅ MCP Foundry testeado completamente
+- ✅ Bug crítico de shell interpretation resuelto
+- ✅ Timeout aumentado para deployments largos
+- ✅ Script de prueba automatizado creado
+- ✅ Validación con múltiples casos de uso
+
+---
+
+**Última actualización**: 17 de octubre de 2025, 20:30
 **Próxima actualización**: Al completar deploy en Anvil o inicialización de frontend
-**Próxima sesión**: Deploy del smart contract y/o inicialización del frontend Next.js
+**Próxima sesión**: Commit de cambios MCP y/o deploy del smart contract

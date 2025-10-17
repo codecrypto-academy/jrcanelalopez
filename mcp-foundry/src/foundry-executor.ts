@@ -16,14 +16,14 @@ export class FoundryExecutor {
    */
   async executeCommand(cmd: FoundryCommand): Promise<CommandResult> {
     return new Promise((resolve) => {
-      const timeout = cmd.timeout || 120000; // 2 minutes default
+      const timeout = cmd.timeout || 900000; // 15 minutes default (increased from 2 minutes)
       let stdout = '';
       let stderr = '';
       let timedOut = false;
 
       const childProcess = spawn(cmd.command, cmd.args, {
         cwd: cmd.workingDir || process.cwd(),
-        shell: true,
+        shell: false, // Changed from true to false to prevent shell interpretation of arguments
       });
 
       // Set timeout
@@ -90,7 +90,7 @@ export class FoundryExecutor {
       let initialized = false;
 
       this.anvilProcess = spawn('anvil', args, {
-        shell: true,
+        shell: false, // Changed from true to false to prevent shell interpretation of arguments
       });
 
       // Capture logs

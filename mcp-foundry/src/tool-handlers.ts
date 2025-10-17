@@ -87,7 +87,7 @@ export class ToolHandlers {
       command: 'forge',
       args: cmdArgs,
       workingDir: args.workingDir,
-      timeout: 300000, // 5 minutes
+      timeout: 900000, // 15 minutes (increased for slow deployments/verifications)
     });
 
     return this.formatResult('forge script', result);
