@@ -109,7 +109,7 @@ secrets/
 # .claude/commands/
 # .claude/agents/*.md
 # .claude/hooks/
+# .claude/sessions/ (documentación de desarrollo)
 
-# Sessions pueden ser privadas si contienen info sensible
-.claude/sessions/
+# Usage logs pueden ser privados
 .claude/agents/usage-log.json
