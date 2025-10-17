@@ -28,6 +28,8 @@ Cada archivo de sesión incluye:
 |-------|---------|----------|------|-------------|
 | 2025-10-16 19:14 | [session-2025-10-16-19-14.md](session-2025-10-16-19-14.md) | ~10 min | Configuración | Creación de documentación (CLAUDE.md, IA.md, comandos) |
 | 2025-10-16 22:34 | [session-2025-10-16-22-34.md](session-2025-10-16-22-34.md) | 3h 9min | Implementación | Hooks, agentes, smart contract, tests y Git setup |
+| 2025-10-17 10:55 | [session-2025-10-17-morning-mcp-dev.md](session-2025-10-17-morning-mcp-dev.md) | 1h 5min | MCP Dev | Desarrollo inicial del MCP Foundry (13 herramientas) |
+| 2025-10-17 18:10 | [session-2025-10-17-mcp-foundry.md](session-2025-10-17-mcp-foundry.md) | 2h 20min | MCP Testing | Testing y debugging del MCP (2 bugs críticos resueltos) |
 
 ## Resumen Acumulado
 
@@ -35,14 +37,17 @@ Cada archivo de sesión incluye:
 - **Configuración**: 40 minutos (Sesión 1: 10 min + Sesión 2: 30 min)
 - **Smart Contract**: 160 minutos (Sesión 2: setup + implementación + tests + debugging)
 - **Git**: 10 minutos (Sesión 2: setup y push)
+- **MCP Foundry**: 205 minutos (Sesión 3: 65 min desarrollo + Sesión 4: 140 min testing)
 - **Frontend**: 0 minutos
 - **Integración**: 0 minutos
-- **TOTAL**: 220 minutos (3h 40min)
+- **TOTAL**: 425 minutos (7h 5min)
 
 ### Tokens Totales
 - **Sesión 1**: ~40,000 tokens
 - **Sesión 2**: ~115,000 tokens
-- **Total acumulado**: ~160,000 tokens
+- **Sesión 3**: ~68,000 tokens
+- **Sesión 4**: ~73,000 tokens
+- **Total acumulado**: ~296,000 tokens
 
 ### Progreso del Proyecto
 - [x] Configuración inicial
@@ -57,7 +62,7 @@ Cada archivo de sesión incluye:
 - [ ] Deploy en Anvil
 - [ ] Integración Web3
 - [ ] Aplicación funcional completa
-- [ ] MCP para Foundry
+- [x] MCP para Foundry (13 herramientas implementadas y testeadas)
 
 ### Archivos Totales Creados
 - **Sesión 1**: 19 archivos (documentación y configuración)
@@ -71,4 +76,11 @@ Cada archivo de sesión incluye:
 
 ---
 
-**Última actualización**: 2025-10-16 22:34
+### Líneas de Código MCP
+- **TypeScript**: 856 líneas (MCP Foundry)
+- **Documentación MCP**: 916 líneas (README + EXAMPLES)
+- **Total MCP**: 1,837 líneas
+
+---
+
+**Última actualización**: 2025-10-17 21:30
