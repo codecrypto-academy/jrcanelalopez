@@ -15,6 +15,13 @@ export interface Token {
 }
 
 /**
+ * Token data with balance included
+ */
+export interface TokenInfo extends Token {
+  balance: string;
+}
+
+/**
  * Transfer data from smart contract
  */
 export interface Transfer {
@@ -25,6 +32,16 @@ export interface Transfer {
   dateCreated: number;
   amount: number;
   status: TransferStatus;
+}
+
+/**
+ * Transfer data with readable status
+ */
+export interface TransferInfo extends Transfer {
+  id: string;
+  status: string;
+  amount: string;
+  tokenId: string;
 }
 
 /**
@@ -50,11 +67,21 @@ export class Web3Service {
   // ============ USER MANAGEMENT ============
 
   /**
-   * Request user role registration
+   * Request a role in the system (self-registration)
    * @param role - Producer, Factory, Retailer, or Consumer
    */
   async requestUserRole(role: string): Promise<void> {
     const tx = await this.contract.requestUserRole(role);
+    await tx.wait();
+  }
+
+  /**
+   * Register a new user in the system (admin only)
+   * @param userAddress - Address of user to register
+   * @param role - Producer, Factory, Retailer, or Consumer
+   */
+  async registerUser(userAddress: string, role: string): Promise<void> {
+    const tx = await this.contract.registerUser(userAddress, role);
     await tx.wait();
   }
 
@@ -74,6 +101,71 @@ export class Web3Service {
    */
   async isAdmin(address: string): Promise<boolean> {
     return await this.contract.isAdmin(address);
+  }
+
+  /**
+   * Get all registered users (for admin panel)
+   * Note: This requires iterating through user IDs
+   * @param maxUserId - Maximum user ID to check (from contract's nextUserId)
+   */
+  async getAllUsers(maxUserId: number): Promise<Array<{id: number, userAddress: string, role: string, status: number}>> {
+    const users = [];
+
+    for (let i = 1; i < maxUserId; i++) {
+      try {
+        const user = await this.contract.users(i);
+        users.push({
+          id: Number(user[0]),
+          userAddress: user[1],
+          role: user[2],
+          status: Number(user[3]),
+        });
+      } catch (err) {
+        // User ID doesn't exist, skip
+        continue;
+      }
+    }
+
+    return users;
+  }
+
+  /**
+   * Get next user ID from contract
+   */
+  async getNextUserId(): Promise<number> {
+    const nextId = await this.contract.nextUserId();
+    return Number(nextId);
+  }
+
+  /**
+   * Get all users with a specific role and Approved status
+   * @param role - Role to filter by (Producer, Factory, Retailer, Consumer)
+   */
+  async getUsersByRole(role: string): Promise<Array<{address: string, role: string}>> {
+    const nextUserId = await this.getNextUserId();
+    const users = [];
+
+    for (let i = 1; i < nextUserId; i++) {
+      try {
+        const user = await this.contract.users(i);
+        const userRole = user[2];
+        const userStatus = Number(user[3]);
+        const userAddress = user[1];
+
+        // Only include Approved users (status = 1) with matching role
+        if (userRole === role && userStatus === 1) {
+          users.push({
+            address: userAddress,
+            role: userRole,
+          });
+        }
+      } catch (err) {
+        // User ID doesn't exist, skip
+        continue;
+      }
+    }
+
+    return users;
   }
 
   // ============ TOKEN MANAGEMENT ============
@@ -98,11 +190,12 @@ export class Web3Service {
   /**
    * Get token information
    * @param tokenId - Token ID
+   * @param userAddress - Optional user address to include balance
    */
-  async getToken(tokenId: number): Promise<Token> {
+  async getToken(tokenId: number, userAddress?: string): Promise<Token | TokenInfo> {
     const result = await this.contract.getToken(tokenId);
 
-    return {
+    const token: Token = {
       id: Number(result[0]),
       creator: result[1],
       name: result[2],
@@ -111,6 +204,17 @@ export class Web3Service {
       parentId: Number(result[5]),
       dateCreated: Number(result[6]),
     };
+
+    // If user address provided, include balance
+    if (userAddress) {
+      const balance = await this.getTokenBalance(tokenId, userAddress);
+      return {
+        ...token,
+        balance: balance.toString(),
+      } as TokenInfo;
+    }
+
+    return token;
   }
 
   /**
@@ -124,12 +228,34 @@ export class Web3Service {
   }
 
   /**
-   * Get all tokens owned by a user
+   * Get all token IDs owned by a user
    * @param userAddress - User address
    */
-  async getUserTokens(userAddress: string): Promise<number[]> {
+  async getUserTokenIds(userAddress: string): Promise<number[]> {
     const tokenIds = await this.contract.getUserTokens(userAddress);
     return tokenIds.map((id: bigint) => Number(id));
+  }
+
+  /**
+   * Get all tokens owned by a user with full information
+   * @param userAddress - User address
+   */
+  async getUserTokens(userAddress: string): Promise<TokenInfo[]> {
+    const tokenIds = await this.getUserTokenIds(userAddress);
+    const tokens: TokenInfo[] = [];
+
+    for (const tokenId of tokenIds) {
+      try {
+        const tokenData = await this.getToken(tokenId, userAddress) as TokenInfo;
+        tokens.push(tokenData);
+      } catch (err) {
+        console.error(`Error loading token ${tokenId}:`, err);
+        // Skip tokens that can't be loaded
+        continue;
+      }
+    }
+
+    return tokens;
   }
 
   // ============ TRANSFER MANAGEMENT ============
@@ -182,12 +308,46 @@ export class Web3Service {
   }
 
   /**
-   * Get all transfers for a user (sent or received)
+   * Get all transfer IDs for a user (sent or received)
    * @param userAddress - User address
    */
-  async getUserTransfers(userAddress: string): Promise<number[]> {
+  async getUserTransferIds(userAddress: string): Promise<number[]> {
     const transferIds = await this.contract.getUserTransfers(userAddress);
     return transferIds.map((id: bigint) => Number(id));
+  }
+
+  /**
+   * Get all transfers for a user with full information
+   * @param userAddress - User address
+   */
+  async getUserTransfers(userAddress: string): Promise<TransferInfo[]> {
+    const transferIds = await this.getUserTransferIds(userAddress);
+    const transfers: TransferInfo[] = [];
+
+    for (const transferId of transferIds) {
+      try {
+        const transferData = await this.getTransfer(transferId);
+
+        // Convert to readable format
+        const statusLabel = Web3Service.getTransferStatusLabel(transferData.status);
+
+        transfers.push({
+          id: transferData.id.toString(),
+          from: transferData.from,
+          to: transferData.to,
+          tokenId: transferData.tokenId.toString(),
+          dateCreated: transferData.dateCreated,
+          amount: transferData.amount.toString(),
+          status: statusLabel,
+        });
+      } catch (err) {
+        console.error(`Error loading transfer ${transferId}:`, err);
+        // Skip transfers that can't be loaded
+        continue;
+      }
+    }
+
+    return transfers;
   }
 
   // ============ UTILITIES ============
