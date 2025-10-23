@@ -117,3 +117,8 @@ secrets/
 # Usage logs pueden ser privados
 .claude/agents/usage-log.json
 .claude/settings.local.json
+
+# ============ Synpress (E2E Testing) ============
+
+# Synpress wallet cache directory
+.cache-synpress/

@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { testWithSynpress } from '@synthetixio/synpress';
 import { MetaMask, metaMaskFixtures } from '@synthetixio/synpress/playwright';
+import adminSetup from './wallet-setup/admin.setup';
+import producerSetup from './wallet-setup/producer.setup';
+import factorySetup from './wallet-setup/factory.setup';
+import retailerSetup from './wallet-setup/retailer.setup';
+import consumerSetup from './wallet-setup/consumer.setup';
 
 /**
  * Complete Supply Chain Flow E2E Test
@@ -18,40 +23,12 @@ import { MetaMask, metaMaskFixtures } from '@synthetixio/synpress/playwright';
  * 10. Verify complete traceability
  */
 
-// Anvil test accounts
-const ADMIN_SEED = 'test test test test test test test test test test test junk'; // Account #0
-const PRODUCER_SEED = 'test test test test test test test test test test test seed1'; // Account #1
-const FACTORY_SEED = 'test test test test test test test test test test test seed2'; // Account #2
-const RETAILER_SEED = 'test test test test test test test test test test test seed3'; // Account #3
-const CONSUMER_SEED = 'test test test test test test test test test test test seed4'; // Account #4
-
-const METAMASK_PASSWORD = 'Tester@1234';
-
-// Create separate test instances for each role
-const adminTest = testWithSynpress(metaMaskFixtures({
-  seed: ADMIN_SEED,
-  password: METAMASK_PASSWORD,
-}));
-
-const producerTest = testWithSynpress(metaMaskFixtures({
-  seed: PRODUCER_SEED,
-  password: METAMASK_PASSWORD,
-}));
-
-const factoryTest = testWithSynpress(metaMaskFixtures({
-  seed: FACTORY_SEED,
-  password: METAMASK_PASSWORD,
-}));
-
-const retailerTest = testWithSynpress(metaMaskFixtures({
-  seed: RETAILER_SEED,
-  password: METAMASK_PASSWORD,
-}));
-
-const consumerTest = testWithSynpress(metaMaskFixtures({
-  seed: CONSUMER_SEED,
-  password: METAMASK_PASSWORD,
-}));
+// Create separate test instances for each role using wallet setup files
+const adminTest = testWithSynpress(metaMaskFixtures(adminSetup));
+const producerTest = testWithSynpress(metaMaskFixtures(producerSetup));
+const factoryTest = testWithSynpress(metaMaskFixtures(factorySetup));
+const retailerTest = testWithSynpress(metaMaskFixtures(retailerSetup));
+const consumerTest = testWithSynpress(metaMaskFixtures(consumerSetup));
 
 // Helper to configure MetaMask for Anvil
 async function setupMetaMask(metamask: MetaMask) {

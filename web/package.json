@@ -10,6 +10,8 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
+    "test:e2e:setup": "bash setup-e2e.sh",
+    "test:e2e:cache": "npx synpress e2e/wallet-setup --debug",
     "test:e2e:landing": "playwright test e2e/landing-page.spec.ts",
     "test:e2e:registration": "playwright test e2e/auto-registration.spec.ts",
     "test:e2e:admin": "playwright test e2e/admin-approval.spec.ts",

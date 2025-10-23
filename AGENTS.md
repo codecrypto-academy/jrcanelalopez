@@ -403,7 +403,7 @@ Cada agente tiene su archivo en `.claude/agents/` con:
 [Con qué agentes trabaja mejor]
 ```
 
-#### 11. Frontend Testing Expert 🆕
+#### 11. Frontend Testing Expert
 **Archivo**: `.claude/agents/frontend-testing-expert.md`
 **Especialidad**: Testing de integración frontend ↔ smart contract
 **Capacidades**:
@@ -426,6 +426,32 @@ el flujo: usuario no-admin se registra, admin aprueba, usuario reconectado
 es reconocido con su rol correcto
 ```
 
+#### 12. Playwright E2E Expert 🆕
+**Archivo**: `.claude/agents/playwright-e2e-expert.md`
+**Especialidad**: Tests E2E avanzados con Playwright y Synpress para DApps Web3
+**Capacidades**:
+- Configurar y troubleshoot Synpress v4 con MetaMask
+- Crear wallet setup files y manejar caches
+- Implementar tests multi-wallet con roles diferentes
+- Resolver errores comunes de Playwright/Synpress
+- Configurar pipelines de tests E2E
+- Testing de transacciones blockchain en navegador
+- Debugging avanzado con headed mode, traces y videos
+
+**Cuándo usar**:
+- Configurar tests E2E con MetaMask desde cero
+- Resolver errores de cache de wallets
+- Crear flujos de testing multi-usuario (Admin, Producer, Factory, etc.)
+- Troubleshoot problemas de Playwright/Synpress
+- Implementar tests de transacciones blockchain completos
+
+**Ejemplo de uso**:
+```
+Usa el agente "Playwright E2E Expert" para resolver el error
+"Cache does not exist" en mis tests de Synpress y configurar
+correctamente los 5 wallets para testing
+```
+
 ## Agentes Futuros (Extensiones)
 
 ### Potenciales Agentes Adicionales
@@ -444,7 +470,7 @@ es reconocido con su rol correcto
 ---
 
 **Proyecto**: Supply Chain Tracker
-**Sistema de Agentes**: v1.1
-**Total de Agentes**: 11
-**Última actualización**: 22 de octubre de 2025
-**Nuevo**: Frontend Testing Expert
+**Sistema de Agentes**: v1.2
+**Total de Agentes**: 12
+**Última actualización**: 23 de octubre de 2025
+**Nuevo**: Playwright E2E Expert - Especialista en tests E2E con Synpress y MetaMask
