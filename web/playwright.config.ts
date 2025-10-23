@@ -9,6 +9,9 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './e2e',
 
+  // Output directories
+  outputDir: './test-results',
+
   // Run tests in files in parallel
   fullyParallel: false, // Keep sequential for blockchain state consistency
 
@@ -21,7 +24,7 @@ export default defineConfig({
   // Reporter
   reporter: [
     ['list'],
-    ['html', { outputFolder: 'playwright-report' }]
+    ['html']
   ],
 
   // Shared settings for all the projects below
