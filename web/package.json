@@ -13,6 +13,8 @@
     "test:e2e:landing": "playwright test e2e/landing-page.spec.ts",
     "test:e2e:registration": "playwright test e2e/auto-registration.spec.ts",
     "test:e2e:admin": "playwright test e2e/admin-approval.spec.ts",
+    "test:e2e:flow": "playwright test e2e/complete-supply-chain-flow.spec.ts",
+    "test:e2e:flow:headed": "playwright test e2e/complete-supply-chain-flow.spec.ts --headed",
     "playwright:report": "playwright show-report",
     "playwright:install": "playwright install --with-deps chromium"
   },

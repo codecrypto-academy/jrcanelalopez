@@ -48,6 +48,47 @@ Admin panel tests for user management:
 npm run test:e2e:admin
 ```
 
+### 4. `complete-supply-chain-flow.spec.ts` ⭐ **Full End-to-End Test**
+Complete supply chain flow testing the entire system from Producer to Consumer:
+
+**Flow Tested:**
+1. **User Registration**: All 4 roles register (Producer, Factory, Retailer, Consumer)
+2. **Admin Approval**: Admin approves all registered users
+3. **Token Creation**: Producer creates raw material token ("Organic Wheat")
+4. **First Transfer**: Producer → Factory (500 units)
+5. **Transfer Acceptance**: Factory accepts the transfer
+6. **Derived Product**: Factory creates derived product ("Wheat Flour" from "Organic Wheat")
+7. **Second Transfer**: Factory → Retailer (400 units)
+8. **Transfer Acceptance**: Retailer accepts the transfer
+9. **Final Transfer**: Retailer → Consumer (200 units)
+10. **Transfer Acceptance**: Consumer accepts the transfer
+11. **Traceability Verification**: Consumer can trace product back to origin
+12. **Transfer History**: All parties can see their transfer history
+13. **Dashboard Stats**: All stats are displayed correctly
+
+**What This Test Validates:**
+- ✅ Complete user lifecycle (register → approve → operate)
+- ✅ Role-based access control (Producer→Factory→Retailer→Consumer)
+- ✅ Token creation with parent-child relationships
+- ✅ Transfer approval workflow (Pending → Accept/Reject)
+- ✅ Balance tracking across all transfers
+- ✅ Traceability from consumer back to origin
+- ✅ Dashboard and transfer history accuracy
+- ✅ Multi-account MetaMask integration with Synpress
+
+**Run with:**
+```bash
+# Headless (faster)
+npm run test:e2e:flow
+
+# Headed mode (see browser actions)
+npm run test:e2e:flow:headed
+```
+
+**Duration:** ~5-7 minutes (involves multiple MetaMask transactions)
+
+**Note:** This is the most comprehensive test. It validates that the entire supply chain system works end-to-end with real blockchain transactions.
+
 ## Prerequisites
 
 ### 1. Install Playwright Browsers
@@ -113,6 +154,8 @@ This runs tests with the browser visible, useful for debugging.
 npm run test:e2e:landing        # Landing page tests only
 npm run test:e2e:registration   # Auto-registration tests
 npm run test:e2e:admin          # Admin approval tests
+npm run test:e2e:flow           # Complete supply chain flow (FULL E2E)
+npm run test:e2e:flow:headed    # Complete flow with browser visible
 ```
 
 ### View Test Report
