@@ -33,6 +33,9 @@ web/.pnp.js
 
 # Testing
 web/coverage
+web/test-results/
+web/playwright-report/
+web/.playwright/
 
 # Next.js
 web/.next/
