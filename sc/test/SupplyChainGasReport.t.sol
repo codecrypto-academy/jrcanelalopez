@@ -59,11 +59,8 @@ contract SupplyChainGasReport is Test {
     }
 
     function _registerAndApprove(address user, string memory role) internal {
-        vm.prank(user);
-        supplyChain.requestUserRole(role);
-
         vm.prank(admin);
-        supplyChain.changeStatusUser(user, SupplyChain.UserStatus.Approved);
+        supplyChain.registerUser(user, role);
     }
 
     // ============ User Management Gas Tests ============
@@ -71,14 +68,14 @@ contract SupplyChainGasReport is Test {
     function testGas_UserRegistration() public {
         console.log("\n[USER MANAGEMENT]");
 
-        _startGas("requestUserRole(Producer)");
-        vm.prank(producer);
-        supplyChain.requestUserRole("Producer");
+        _startGas("registerUser(Producer)");
+        vm.prank(admin);
+        supplyChain.registerUser(producer, "Producer");
         _endGas();
 
-        _startGas("changeStatusUser(Approve)");
+        _startGas("changeStatusUser(Reject)");
         vm.prank(admin);
-        supplyChain.changeStatusUser(producer, SupplyChain.UserStatus.Approved);
+        supplyChain.changeStatusUser(producer, SupplyChain.UserStatus.Rejected);
         _endGas();
 
         _startGas("getUserInfo()");
@@ -94,44 +91,23 @@ contract SupplyChainGasReport is Test {
         console.log("\n[BATCH USER REGISTRATION]");
 
         _startGas("Register Producer");
-        vm.prank(producer);
-        supplyChain.requestUserRole("Producer");
+        vm.prank(admin);
+        supplyChain.registerUser(producer, "Producer");
         _endGas();
 
         _startGas("Register Factory");
-        vm.prank(factory);
-        supplyChain.requestUserRole("Factory");
+        vm.prank(admin);
+        supplyChain.registerUser(factory, "Factory");
         _endGas();
 
         _startGas("Register Retailer");
-        vm.prank(retailer);
-        supplyChain.requestUserRole("Retailer");
+        vm.prank(admin);
+        supplyChain.registerUser(retailer, "Retailer");
         _endGas();
 
         _startGas("Register Consumer");
-        vm.prank(consumer);
-        supplyChain.requestUserRole("Consumer");
-        _endGas();
-
-        // Approve all
-        _startGas("Approve Producer");
         vm.prank(admin);
-        supplyChain.changeStatusUser(producer, SupplyChain.UserStatus.Approved);
-        _endGas();
-
-        _startGas("Approve Factory");
-        vm.prank(admin);
-        supplyChain.changeStatusUser(factory, SupplyChain.UserStatus.Approved);
-        _endGas();
-
-        _startGas("Approve Retailer");
-        vm.prank(admin);
-        supplyChain.changeStatusUser(retailer, SupplyChain.UserStatus.Approved);
-        _endGas();
-
-        _startGas("Approve Consumer");
-        vm.prank(admin);
-        supplyChain.changeStatusUser(consumer, SupplyChain.UserStatus.Approved);
+        supplyChain.registerUser(consumer, "Consumer");
         _endGas();
     }
 

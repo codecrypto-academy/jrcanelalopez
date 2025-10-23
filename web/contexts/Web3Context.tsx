@@ -91,7 +91,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
       }
     } catch (err: any) {
       // User not registered yet - this is expected for new users
-      if (err.message?.includes('User does not exist')) {
+      if (err.message?.includes('UserDoesNotExist') || err.message?.includes('User does not exist')) {
         setUserInfo(null);
         if (typeof window !== 'undefined') {
           localStorage.removeItem('userInfo');
@@ -109,6 +109,11 @@ export function Web3Provider({ children }: Web3ProviderProps) {
   const connect = async () => {
     if (!isMetaMaskInstalled) {
       setError('MetaMask is not installed. Please install it to continue.');
+      return;
+    }
+
+    if (!CONTRACT_ADDRESS) {
+      setError('Contract address not configured. Please check .env.local');
       return;
     }
 
@@ -139,9 +144,14 @@ export function Web3Provider({ children }: Web3ProviderProps) {
       }
 
       // Initialize contract
+      // Ensure ABI is valid
+      if (!SupplyChainArtifact || !Array.isArray(SupplyChainArtifact)) {
+        throw new Error('Invalid contract ABI. Please regenerate SupplyChain.json');
+      }
+
       const contractInstance = new ethers.Contract(
         CONTRACT_ADDRESS,
-        SupplyChainArtifact.abi,
+        SupplyChainArtifact,
         web3Signer
       );
 

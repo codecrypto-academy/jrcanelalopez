@@ -6,7 +6,15 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:landing": "playwright test e2e/landing-page.spec.ts",
+    "test:e2e:registration": "playwright test e2e/auto-registration.spec.ts",
+    "test:e2e:admin": "playwright test e2e/admin-approval.spec.ts",
+    "playwright:report": "playwright show-report",
+    "playwright:install": "playwright install --with-deps chromium"
   },
   "dependencies": {
     "ethers": "^6.15.0",
@@ -16,12 +24,15 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.56.1",
+    "@synthetixio/synpress": "^4.1.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.6",
+    "playwright-core": "^1.56.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

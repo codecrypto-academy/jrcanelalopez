@@ -1,0 +1,25 @@
+{
+  "name": "supply-chain-tracker-tests",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Integration tests for Supply Chain Tracker",
+  "scripts": {
+    "test": "npm run test:frontend-flow && npm run test:self-registration && npm run test:multiple-roles && npm run test:user-rejection",
+    "test:frontend-flow": "node test-frontend-flow.mjs",
+    "test:self-registration": "node test-self-registration.mjs",
+    "test:multiple-roles": "node test-multiple-roles-approval.mjs",
+    "test:user-rejection": "node test-user-rejection.mjs"
+  },
+  "keywords": [
+    "blockchain",
+    "testing",
+    "ethereum",
+    "foundry",
+    "nextjs"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ethers": "^6.15.0"
+  }
+}

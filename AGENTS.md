@@ -403,15 +403,37 @@ Cada agente tiene su archivo en `.claude/agents/` con:
 [Con qué agentes trabaja mejor]
 ```
 
+#### 11. Frontend Testing Expert 🆕
+**Archivo**: `.claude/agents/frontend-testing-expert.md`
+**Especialidad**: Testing de integración frontend ↔ smart contract
+**Capacidades**:
+- Crear tests E2E para flujos de usuario
+- Testing de integración Web3 con ethers.js
+- Automatizar tests de contratos con Anvil
+- Verificar flujos completos (registro, tokens, transferencias)
+- Generar reportes de tests coloridos y detallados
+
+**Cuándo usar**:
+- Crear tests de flujos de usuario (ej: auto-registro)
+- Verificar integración frontend-blockchain
+- Automatizar tests de regresión
+- Validar comportamiento de DApp
+
+**Ejemplo de uso**:
+```
+Usa el agente "Frontend Testing Expert" para crear un test que verifique
+el flujo: usuario no-admin se registra, admin aprueba, usuario reconectado
+es reconocido con su rol correcto
+```
+
 ## Agentes Futuros (Extensiones)
 
 ### Potenciales Agentes Adicionales
 
 1. **UI/UX Designer** - Diseño de interfaces y experiencia de usuario
 2. **Performance Analyzer** - Análisis de performance frontend
-3. **E2E Test Expert** - Tests end-to-end con Playwright
-4. **Contract Upgrader** - Gestión de upgrades de contratos
-5. **Analytics Integrator** - Integración de analytics y métricas
+3. **Contract Upgrader** - Gestión de upgrades de contratos
+4. **Analytics Integrator** - Integración de analytics y métricas
 
 ## Referencias
 
@@ -422,5 +444,7 @@ Cada agente tiene su archivo en `.claude/agents/` con:
 ---
 
 **Proyecto**: Supply Chain Tracker
-**Sistema de Agentes**: v1.0
-**Última actualización**: 16 de octubre de 2025
+**Sistema de Agentes**: v1.1
+**Total de Agentes**: 11
+**Última actualización**: 22 de octubre de 2025
+**Nuevo**: Frontend Testing Expert

@@ -118,6 +118,7 @@ contract SupplyChain is Ownable, Pausable {
     // ============ Custom Errors ============
 
     error UserNotApproved();
+    error UserDoesNotExist();
     error InvalidParentId();
     error UserAlreadyRegistered();
     error InvalidRole();
@@ -144,13 +145,15 @@ contract SupplyChain is Ownable, Pausable {
     // ============ Constructor ============
 
     /// @notice Initialize contract with deployer as owner
-    constructor() Ownable(msg.sender) Pausable() {}
+    constructor() Ownable(msg.sender) {
+        // Pausable constructor does not take arguments
+    }
 
     // ============ User Management Functions ============
 
-    /// @notice Request a role in the system
+    /// @notice Request a role in the system (self-registration)
     /// @dev Creates user with Pending status, awaiting admin approval
-    /// @param role Role to request: "Producer", "Factory", "Retailer", or "Consumer"
+    /// @param role Role requested: "Producer", "Factory", "Retailer", or "Consumer"
     function requestUserRole(string calldata role) external whenNotPaused {
         if (addressToUserId[msg.sender] != 0) revert UserAlreadyRegistered();
 
@@ -170,12 +173,46 @@ contract SupplyChain is Ownable, Pausable {
             id: userId,
             userAddress: msg.sender,
             role: role,
-            status: UserStatus.Pending
+            status: UserStatus.Pending  // Awaiting admin approval
         });
 
         addressToUserId[msg.sender] = userId;
 
         emit UserRoleRequested(msg.sender, role);
+        emit UserStatusChanged(msg.sender, UserStatus.Pending);
+    }
+
+    /// @notice Register a new user in the system (admin only)
+    /// @dev Creates user with Approved status, ready to operate
+    /// @param userAddress Address of the user to register
+    /// @param role Role to assign: "Producer", "Factory", "Retailer", or "Consumer"
+    function registerUser(address userAddress, string calldata role) external onlyOwner whenNotPaused {
+        if (userAddress == address(0)) revert InvalidAddress();
+        if (addressToUserId[userAddress] != 0) revert UserAlreadyRegistered();
+
+        // Validate role
+        bytes32 roleHash = keccak256(bytes(role));
+        if (
+            roleHash != keccak256(bytes("Producer")) &&
+            roleHash != keccak256(bytes("Factory")) &&
+            roleHash != keccak256(bytes("Retailer")) &&
+            roleHash != keccak256(bytes("Consumer"))
+        ) {
+            revert InvalidRole();
+        }
+
+        uint256 userId = nextUserId++;
+        users[userId] = User({
+            id: userId,
+            userAddress: userAddress,
+            role: role,
+            status: UserStatus.Approved  // Directly approved by admin
+        });
+
+        addressToUserId[userAddress] = userId;
+
+        emit UserRoleRequested(userAddress, role);
+        emit UserStatusChanged(userAddress, UserStatus.Approved);
     }
 
     /// @notice Change user status (owner only)
@@ -185,7 +222,7 @@ contract SupplyChain is Ownable, Pausable {
         if (userAddress == address(0)) revert InvalidAddress();
 
         uint256 userId = addressToUserId[userAddress];
-        if (userId == 0) revert UserNotApproved();
+        if (userId == 0) revert UserDoesNotExist();
 
         users[userId].status = newStatus;
 
@@ -197,7 +234,7 @@ contract SupplyChain is Ownable, Pausable {
     /// @return user User struct with all information
     function getUserInfo(address userAddress) external view returns (User memory user) {
         uint256 userId = addressToUserId[userAddress];
-        if (userId == 0) revert UserNotApproved();
+        if (userId == 0) revert UserDoesNotExist();
 
         return users[userId];
     }

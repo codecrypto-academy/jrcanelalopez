@@ -95,7 +95,7 @@ enum TransferStatus { Pending, Accepted, Rejected }
 ### Funciones Principales del Contrato
 
 **Gestión de Usuarios**
-- `requestUserRole(string memory role)`: Solicitar registro con rol
+- `registerUser(address userAddress, string memory role)`: Registrar nuevo usuario (solo admin)
 - `changeStatusUser(address userAddress, UserStatus newStatus)`: Cambiar estado (solo admin)
 - `getUserInfo(address userAddress)`: Obtener información del usuario
 - `isAdmin(address userAddress)`: Verificar si es admin
@@ -122,7 +122,10 @@ enum TransferStatus { Pending, Accepted, Rejected }
    - Consumer NO puede transferir (✗)
    - Cualquier otro flujo está prohibido
 
-2. **Aprobación de Usuarios**:
+2. **Registro y Aprobación de Usuarios**:
+   - **SOLO el admin puede registrar nuevos usuarios** en el sistema
+   - Los usuarios NO pueden auto-registrarse
+   - El admin debe llamar a `registerUser(address, role)` para dar de alta a un usuario
    - Solo usuarios con status `Approved` pueden operar
    - Solo el `admin` puede cambiar estados de usuarios
    - El admin es quien desplegó el contrato
@@ -142,11 +145,10 @@ enum TransferStatus { Pending, Accepted, Rejected }
 
 ### Rutas de la Aplicación
 
-- `/` - Landing/Login/Register
+- `/` - Landing/Login
   - Si no está conectado: botón conectar MetaMask
-  - Si conectado y no registrado: formulario de registro
-  - Si registrado pero pendiente: mensaje de espera
-  - Si aprobado: bienvenida + acceso a dashboard
+  - Si conectado y no registrado: mensaje indicando que debe contactar al admin
+  - Si registrado y aprobado: bienvenida + acceso a dashboard
 
 - `/dashboard` - Panel principal según rol
 - `/tokens` - Lista de tokens del usuario
@@ -204,13 +206,13 @@ if (typeof window !== 'undefined') {
 ## Flujos de Trabajo Principales
 
 ### 1. Registro de Usuario
-1. Usuario conecta MetaMask
-2. Selecciona rol (Producer/Factory/Retailer/Consumer)
-3. Llama a `requestUserRole(role)`
-4. Estado pasa a `Pending`
-5. Admin revisa en `/admin/users`
-6. Admin aprueba con `changeStatusUser(address, Approved)`
-7. Usuario puede operar
+1. **Admin** conecta con MetaMask
+2. **Admin** va al panel `/admin/users`
+3. **Admin** ingresa la dirección del usuario a registrar
+4. **Admin** selecciona el rol (Producer/Factory/Retailer/Consumer)
+5. **Admin** llama a `registerUser(userAddress, role)`
+6. Usuario queda registrado con estado `Approved` (listo para operar)
+7. Usuario puede conectarse y empezar a operar inmediatamente
 
 ### 2. Creación de Token
 1. Usuario aprobado va a `/tokens/create`

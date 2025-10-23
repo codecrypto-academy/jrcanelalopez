@@ -35,9 +35,11 @@ contract SupplyChainTest is Test {
     // ============ Helper Functions ============
 
     function _registerAndApprove(address user, string memory role) internal {
+        // User requests role (self-registration)
         vm.prank(user);
         supplyChain.requestUserRole(role);
 
+        // Admin approves
         vm.prank(admin);
         supplyChain.changeStatusUser(user, SupplyChain.UserStatus.Approved);
     }
@@ -58,32 +60,40 @@ contract SupplyChainTest is Test {
         vm.expectEmit(true, false, false, true);
         emit UserRoleRequested(producer, "Producer");
 
-        vm.prank(producer);
-        supplyChain.requestUserRole("Producer");
+        vm.prank(admin);
+        supplyChain.registerUser(producer, "Producer");
 
         SupplyChain.User memory user = supplyChain.getUserInfo(producer);
         assertEq(user.userAddress, producer, "User address should match");
         assertEq(user.role, "Producer", "Role should be Producer");
-        assertEq(uint(user.status), uint(SupplyChain.UserStatus.Pending), "Status should be Pending");
+        assertEq(uint(user.status), uint(SupplyChain.UserStatus.Approved), "Status should be Approved");
     }
 
     function testAdminApproveUser() public {
-        vm.prank(producer);
-        supplyChain.requestUserRole("Producer");
+        vm.prank(admin);
+        supplyChain.registerUser(producer, "Producer");
 
+        // User is already approved, test changing status to rejected and back
         vm.expectEmit(true, false, false, true);
-        emit UserStatusChanged(producer, SupplyChain.UserStatus.Approved);
+        emit UserStatusChanged(producer, SupplyChain.UserStatus.Rejected);
 
+        vm.prank(admin);
+        supplyChain.changeStatusUser(producer, SupplyChain.UserStatus.Rejected);
+
+        SupplyChain.User memory user = supplyChain.getUserInfo(producer);
+        assertEq(uint(user.status), uint(SupplyChain.UserStatus.Rejected), "Status should be Rejected");
+
+        // Change back to approved
         vm.prank(admin);
         supplyChain.changeStatusUser(producer, SupplyChain.UserStatus.Approved);
 
-        SupplyChain.User memory user = supplyChain.getUserInfo(producer);
+        user = supplyChain.getUserInfo(producer);
         assertEq(uint(user.status), uint(SupplyChain.UserStatus.Approved), "Status should be Approved");
     }
 
     function testAdminRejectUser() public {
-        vm.prank(producer);
-        supplyChain.requestUserRole("Producer");
+        vm.prank(admin);
+        supplyChain.registerUser(producer, "Producer");
 
         vm.prank(admin);
         supplyChain.changeStatusUser(producer, SupplyChain.UserStatus.Rejected);
@@ -93,13 +103,13 @@ contract SupplyChainTest is Test {
     }
 
     function testOnlyAdminCanChangeStatus() public {
-        vm.prank(producer);
-        supplyChain.requestUserRole("Producer");
+        vm.prank(admin);
+        supplyChain.registerUser(producer, "Producer");
 
-        // Non-admin tries to approve - should revert with OwnableUnauthorizedAccount
+        // Non-admin tries to change status - should revert with OwnableUnauthorizedAccount
         vm.expectRevert(abi.encodeWithSignature("OwnableUnauthorizedAccount(address)", factory));
         vm.prank(factory);
-        supplyChain.changeStatusUser(producer, SupplyChain.UserStatus.Approved);
+        supplyChain.changeStatusUser(producer, SupplyChain.UserStatus.Rejected);
     }
 
     function testIsAdmin() public {
@@ -109,17 +119,17 @@ contract SupplyChainTest is Test {
 
     function testInvalidRole() public {
         vm.expectRevert(SupplyChain.InvalidRole.selector);
-        vm.prank(producer);
-        supplyChain.requestUserRole("InvalidRole");
+        vm.prank(admin);
+        supplyChain.registerUser(producer, "InvalidRole");
     }
 
     function testUserAlreadyRegistered() public {
-        vm.prank(producer);
-        supplyChain.requestUserRole("Producer");
+        vm.prank(admin);
+        supplyChain.registerUser(producer, "Producer");
 
         vm.expectRevert(SupplyChain.UserAlreadyRegistered.selector);
-        vm.prank(producer);
-        supplyChain.requestUserRole("Factory");
+        vm.prank(admin);
+        supplyChain.registerUser(producer, "Factory");
     }
 
     // ============ Token Creation Tests ============
@@ -190,9 +200,12 @@ contract SupplyChainTest is Test {
     }
 
     function testUnapprovedUserCannotCreateToken() public {
-        vm.prank(producer);
-        supplyChain.requestUserRole("Producer");
-        // Not approved
+        vm.prank(admin);
+        supplyChain.registerUser(producer, "Producer");
+
+        // Change status to Rejected
+        vm.prank(admin);
+        supplyChain.changeStatusUser(producer, SupplyChain.UserStatus.Rejected);
 
         vm.expectRevert(SupplyChain.UserNotApproved.selector);
         _createToken(producer, "Token", 100, 0);
@@ -410,8 +423,8 @@ contract SupplyChainTest is Test {
         supplyChain.pause();
 
         vm.expectRevert(abi.encodeWithSignature("EnforcedPause()"));
-        vm.prank(producer);
-        supplyChain.requestUserRole("Producer");
+        vm.prank(admin);
+        supplyChain.registerUser(producer, "Producer");
     }
 
     function testCannotCreateTokenWhenPaused() public {

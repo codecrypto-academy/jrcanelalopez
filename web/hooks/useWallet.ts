@@ -1,4 +1,6 @@
+import { useState, useEffect } from 'react';
 import { useWeb3, UserStatus } from '@/contexts/Web3Context';
+import { Web3Service } from '@/lib/web3Service';
 
 /**
  * Custom hook for wallet operations
@@ -6,6 +8,7 @@ import { useWeb3, UserStatus } from '@/contexts/Web3Context';
  */
 export function useWallet() {
   const web3Context = useWeb3();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Helper: Check if user is registered (exists in contract)
   const isRegistered = web3Context.userInfo !== null;
@@ -67,6 +70,27 @@ export function useWallet() {
     }
   };
 
+  // Check if current user is admin
+  useEffect(() => {
+    const checkAdmin = async () => {
+      if (!web3Context.account || !web3Context.contract) {
+        setIsAdmin(false);
+        return;
+      }
+
+      try {
+        const web3Service = new Web3Service(web3Context.contract);
+        const adminStatus = await web3Service.isAdmin(web3Context.account);
+        setIsAdmin(adminStatus);
+      } catch (err) {
+        console.error('Error checking admin status:', err);
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdmin();
+  }, [web3Context.account, web3Context.contract]);
+
   return {
     // Original Web3Context values
     ...web3Context,
@@ -76,6 +100,7 @@ export function useWallet() {
     isApproved,
     isPending,
     isRejected,
+    isAdmin,
     userRole,
     formatAddress,
     getStatusLabel,
