@@ -126,8 +126,34 @@ server.onerror = (error) => {
   console.error('[MCP Error]', error);
 };
 
+// Handle EPIPE errors gracefully
+process.on('uncaughtException', (error: any) => {
+  if (error.code === 'EPIPE') {
+    // EPIPE errors are expected when the client disconnects
+    console.error('[MCP] Client disconnected (EPIPE)');
+    if (executor.isAnvilRunning()) {
+      executor.stopAnvil();
+    }
+    process.exit(0);
+  } else {
+    console.error('[MCP] Uncaught exception:', error);
+    process.exit(1);
+  }
+});
+
 // Handle process termination
 process.on('SIGINT', async () => {
+  console.error('[MCP] Received SIGINT, shutting down...');
+  // Stop anvil if running
+  if (executor.isAnvilRunning()) {
+    executor.stopAnvil();
+  }
+  await server.close();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  console.error('[MCP] Received SIGTERM, shutting down...');
   // Stop anvil if running
   if (executor.isAnvilRunning()) {
     executor.stopAnvil();
@@ -144,6 +170,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error('Fatal error:', error);
+  console.error('Fatal error in main():', error);
   process.exit(1);
 });

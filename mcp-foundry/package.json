@@ -1,6 +1,6 @@
 {
   "name": "@javierruiz/mcp-foundry",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "MCP server for Foundry CLI tools (anvil, cast, forge)",
   "type": "module",
   "bin": {
@@ -13,7 +13,13 @@
     "build": "tsc && chmod +x build/index.js",
     "watch": "tsc --watch",
     "prepare": "npm run build",
-    "inspector": "npx @modelcontextprotocol/inspector node build/index.js"
+    "inspector": "npx @modelcontextprotocol/inspector node build/index.js",
+    "restart": "./restart-mcp.sh",
+    "restart:build": "./restart-mcp.sh --build",
+    "restart:claude": "./restart-mcp.sh --claude",
+    "restart:all": "./restart-mcp.sh --build --claude",
+    "stop": "./stop-mcp.sh",
+    "test:anvil": "node test-anvil-detection.mjs"
   },
   "keywords": [
     "mcp",
@@ -31,6 +37,7 @@
     "@modelcontextprotocol/sdk": "^1.0.4"
   },
   "devDependencies": {
+    "@modelcontextprotocol/inspector": "^0.17.2",
     "@types/node": "^22.10.2",
     "typescript": "^5.7.2"
   },

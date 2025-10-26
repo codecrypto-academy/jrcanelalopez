@@ -341,39 +341,48 @@ Claude will:
 
 ## Troubleshooting
 
-### "Command not found" errors
+> **📘 Complete Troubleshooting Guide**: See [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md) for detailed solutions to common problems, including the `anvil_status` detection issue.
+
+### Quick Fixes
+
+**"Command not found" errors**
 
 Ensure Foundry is installed and in your PATH:
 ```bash
-which forge
-which cast
-which anvil
-```
+which forge cast anvil
 
-If not found, install Foundry:
-```bash
+# If not found, install:
 curl -L https://foundry.paradigm.xyz | bash
 foundryup
 ```
 
-### MCP Server not appearing in Claude
+**MCP Server not appearing in Claude**
 
-1. Check the config file path is correct
-2. Ensure the build/ directory exists and contains compiled JS
-3. Check Claude Desktop logs (Help > Show Logs)
-4. Try restarting Claude Desktop completely
+1. Check config path: `~/Library/Application Support/Claude/claude_desktop_config.json`
+2. Verify build exists: `ls build/index.js`
+3. Restart Claude Desktop completely
+4. Check logs: Claude Desktop → Help → Show Logs
 
-### Anvil won't start
+**anvil_status doesn't detect running Anvil**
 
-- Check if port 8545 is already in use
-- Try specifying a different port with `anvil_start`
-- Check Anvil is installed: `anvil --version`
+This has been fixed in v1.1.0! If you're still experiencing this:
+```bash
+npm run build  # Recompile
+pkill -9 "Claude" && open -a "Claude"  # Restart Claude
+```
 
-### TypeScript compilation errors
+See [TROUBLESHOOTING.md](TROUBLESHOOTING.md#problema-anvil_status-no-detecta-anvil-corriendo) for details.
+
+**Anvil won't start**
+
+- Check port: `lsof -i :8545`
+- Try different port in `anvil_start`
+- Verify installation: `anvil --version`
+
+**TypeScript errors**
 
 ```bash
-npm install  # Reinstall dependencies
-npm run build  # Rebuild
+npm install && npm run build
 ```
 
 ## Contributing

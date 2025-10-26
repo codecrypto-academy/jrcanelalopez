@@ -24,6 +24,161 @@
 3. Construccion de un MCP que envuelva los cli de foundry anvil, cast, forge.
 4. Opcional. Manejo del contrato inteligente en la aplicacion con la IA.
 
+---
+
+## 🚀 Quick Start - Levantar el Proyecto
+
+**Si ya tienes el proyecto clonado y quieres ejecutarlo rápidamente, sigue estos pasos:**
+
+### Paso 1: Verificar Prerequisitos
+
+```bash
+# Verificar instalaciones necesarias
+node --version    # Debe ser v18 o superior
+npm --version
+forge --version   # Foundry
+anvil --version
+```
+
+Si falta alguno, instálalos según la [sección de Prerequisitos](#-prerequisitos-e-instalación) más abajo.
+
+### Paso 2: Instalar Dependencias
+
+```bash
+# En la raíz del proyecto
+cd sc
+forge install     # Instalar dependencias de Foundry
+
+cd ../web
+npm install       # Instalar dependencias de Next.js
+```
+
+### Paso 3: Iniciar Blockchain Local (Terminal 1)
+
+```bash
+# Iniciar Anvil en un terminal
+anvil
+
+# Anvil mostrará 10 cuentas con sus private keys
+# Guarda la primera (Admin): 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+# Private Key: 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+```
+
+### Paso 4: Compilar y Desplegar Smart Contract (Terminal 2)
+
+```bash
+cd sc
+
+# Compilar el contrato
+forge build
+
+# Ejecutar tests (opcional pero recomendado)
+forge test
+
+# Desplegar en Anvil local
+./deploy-local.sh
+
+# O manualmente:
+forge script script/Deploy.s.sol \
+  --rpc-url http://localhost:8545 \
+  --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
+  --broadcast
+
+# IMPORTANTE: Copia la dirección del contrato desplegado
+# Aparecerá algo como: Contract deployed at: 0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6
+```
+
+### Paso 5: Configurar MetaMask
+
+1. **Agregar Red Local:**
+   - Abrir MetaMask → Redes → Agregar Red → Agregar red manualmente
+   - Network Name: `Anvil Local`
+   - RPC URL: `http://localhost:8545`
+   - Chain ID: `31337`
+   - Currency Symbol: `ETH`
+
+2. **Importar Cuentas de Prueba (al menos 5):**
+   - Admin: `0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`
+   - Producer: `0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d`
+   - Factory: `0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a`
+   - Retailer: `0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6`
+   - Consumer: `0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a`
+
+### Paso 6: Actualizar Dirección del Contrato
+
+```bash
+cd web
+
+# Editar web/contracts/config.ts
+# Reemplazar la dirección del contrato con la que copiaste en el Paso 4
+```
+
+**Archivo: `web/contracts/config.ts`**
+```typescript
+export const CONTRACT_ADDRESS = '0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6'; // ← Tu dirección aquí
+```
+
+### Paso 7: Iniciar Frontend (Terminal 3)
+
+```bash
+cd web
+
+# Iniciar en modo desarrollo
+npm run dev
+
+# Abrir navegador en: http://localhost:3000
+```
+
+### Paso 8: Usar la Aplicación
+
+1. **Conectar con MetaMask** (cuenta Admin)
+2. **Registrar usuarios** en `/admin/users`:
+   - Producer: `0x70997970C51812dc3A010C7d01b50e0d17dc79C8`
+   - Factory: `0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC`
+   - Retailer: `0x90F79bf6EB2c4f870365E785982E1f101E93b906`
+   - Consumer: `0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65`
+3. **Cambiar cuenta en MetaMask** a Producer
+4. **Crear token** de materia prima en `/tokens/create`
+5. **Transferir** a Factory → Retailer → Consumer
+
+### Comandos Útiles
+
+```bash
+# Smart Contract
+cd sc
+forge test              # Ejecutar tests
+forge test -vvv        # Tests con trazas detalladas
+forge coverage         # Ver cobertura de tests
+./deploy-local.sh      # Redesplegar contrato
+
+# Frontend
+cd web
+npm run dev           # Desarrollo
+npm run build         # Build de producción
+npm run lint          # Linting
+
+# Detener Anvil
+pkill anvil          # O Ctrl+C en el terminal donde corre
+```
+
+### Troubleshooting Rápido
+
+**Error: "MetaMask not detected"**
+- Instalar extensión de MetaMask en tu navegador
+
+**Error: "Wrong network"**
+- Verificar que MetaMask esté conectado a la red `Anvil Local` (Chain ID: 31337)
+
+**Error: "Contract not deployed"**
+- Verificar que Anvil esté corriendo
+- Redesplegar el contrato con `./deploy-local.sh`
+
+**Error: "Transaction reverted"**
+- Verificar que el usuario esté aprobado en `/admin/users`
+- Verificar que tengas ETH en la cuenta (Anvil da ETH de prueba)
+
+---
+
 ### 🏗️ Objetivos Técnicos
 
 Tu aplicación final debe implementar:
@@ -711,6 +866,8 @@ if (typeof window !== "undefined") {
 
 ## 🧪 Testing y Validación
 
+> **📘 Guía Completa de Testing**: Ver [`TESTING.md`](TESTING.md) para documentación exhaustiva de testing, troubleshooting y mejores prácticas.
+
 ### **Tests de Smart Contract**
 
 ```bash
@@ -724,6 +881,29 @@ forge test --match-test testCreateToken -vvv
 
 # Test con coverage
 forge coverage
+
+# Usando comandos slash de Claude Code
+/test-sc      # Ejecutar tests
+/coverage-sc  # Ver cobertura
+```
+
+### **Tests E2E del Frontend**
+
+```bash
+cd web
+
+# Setup inicial (primera vez)
+npm run test:e2e:setup
+
+# Ejecutar tests E2E
+npm run test:e2e
+
+# Tests específicos
+npm run test:e2e:landing    # Tests de UI
+npm run test:e2e:flow       # Flujo completo
+
+# Con navegador visible (debugging)
+npm run test:e2e:headed
 ```
 
 ### **Validación de Frontend**
@@ -740,6 +920,16 @@ npm run lint
 # Desarrollo con hot reload
 npm run dev
 ```
+
+### **Cobertura de Testing**
+
+Este proyecto implementa testing completo en múltiples niveles:
+
+- **Smart Contract**: 22+ tests unitarios (Foundry) - Objetivo: >90% cobertura
+- **Frontend E2E**: Tests con Playwright + Synpress
+  - Tests de UI sin wallet (landing page, navegación)
+  - Tests con MetaMask (registro, aprobaciones)
+  - Tests multi-wallet (flujo completo Producer→Consumer)
 
 ### **Casos de Prueba Recomendados**
 
@@ -761,6 +951,16 @@ npm run dev
    - Aceptar transferencia
    - Rechazar transferencia
    - Verificar actualización de balances
+
+### **Recursos de Testing**
+
+- **Guía Completa**: [`TESTING.md`](TESTING.md) - Documentación exhaustiva
+- **Tests SC**: [`sc/test/SupplyChain.t.sol`](sc/test/SupplyChain.t.sol)
+- **Tests E2E**: [`web/e2e/`](web/e2e/)
+- **Agentes Especializados**:
+  - Testing Expert: [`.claude/agents/testing-expert.md`](.claude/agents/testing-expert.md)
+  - Playwright E2E Expert: [`.claude/agents/playwright-e2e-expert.md`](.claude/agents/playwright-e2e-expert.md)
+  - Guía E2E: [`.claude/agents/PLAYWRIGHT_E2E_GUIDE.md`](.claude/agents/PLAYWRIGHT_E2E_GUIDE.md)
 
 ---
 
@@ -808,12 +1008,22 @@ npm run dev
 
 ## 📚 Recursos Adicionales
 
+### **Documentación del Proyecto**
+
+- **[TESTING.md](TESTING.md)** - Guía completa de testing (Smart Contract + E2E)
+- **[CLAUDE.md](CLAUDE.md)** - Guía técnica completa para IA
+- **Agentes de Claude Code**: [`.claude/agents/`](.claude/agents/)
+  - Testing Expert, Playwright E2E Expert, Security Auditor, etc.
+- **Comandos Slash**: [`.claude/commands/`](.claude/commands/)
+  - `/test-sc`, `/coverage-sc`, `/create-test`, etc.
+
 ### **Documentación Oficial**
 
 - [Solidity Docs](https://docs.soliditylang.org/)
 - [Foundry Book](https://book.getfoundry.sh/)
 - [Next.js Docs](https://nextjs.org/docs)
 - [Ethers.js Docs](https://docs.ethers.org/)
+- [Playwright Docs](https://playwright.dev/)
 
 ### **Tutoriales Recomendados**
 

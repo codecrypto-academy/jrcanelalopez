@@ -28,6 +28,10 @@ export default function DashboardPage() {
     if (!isLoading && (!isConnected || !userInfo)) {
       router.push('/');
     }
+    // Redirect admin to admin panel
+    if (!isLoading && userInfo && userInfo.role === 'Admin') {
+      router.push('/admin/users');
+    }
   }, [isConnected, userInfo, isLoading, router]);
 
   // Load dashboard statistics

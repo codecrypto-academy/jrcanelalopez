@@ -72,26 +72,46 @@ export function Web3Provider({ children }: Web3ProviderProps) {
       setIsLoading(true);
       setError(null);
 
-      // Call getUserInfo from contract
-      const result = await contractInstance.getUserInfo(address);
+      // First, check if address is admin
+      const isAdminResult = await contractInstance.isAdmin(address);
 
-      // Convert BigInt values to numbers/strings
-      const userInfoData: UserInfo = {
-        id: Number(result[0]),
-        userAddress: result[1],
-        role: result[2],
-        status: Number(result[3]),
-      };
+      if (isAdminResult) {
+        // Admin case: create special UserInfo for admin
+        const adminInfo: UserInfo = {
+          id: 0, // Special ID for admin
+          userAddress: address,
+          role: 'Admin',
+          status: UserStatus.Approved, // Admin is always approved
+        };
 
-      setUserInfo(userInfoData);
+        setUserInfo(adminInfo);
 
-      // Store in localStorage for persistence
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('userInfo', JSON.stringify(userInfoData));
+        // Store in localStorage for persistence
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('userInfo', JSON.stringify(adminInfo));
+        }
+      } else {
+        // Regular user case: call getUserInfo from contract
+        const result = await contractInstance.getUserInfo(address);
+
+        // Convert BigInt values to numbers/strings
+        const userInfoData: UserInfo = {
+          id: Number(result[0]),
+          userAddress: result[1],
+          role: result[2],
+          status: Number(result[3]),
+        };
+
+        setUserInfo(userInfoData);
+
+        // Store in localStorage for persistence
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('userInfo', JSON.stringify(userInfoData));
+        }
       }
     } catch (err: any) {
       // User not registered yet - this is expected for new users
-      if (err.message?.includes('UserDoesNotExist') || err.message?.includes('User does not exist')) {
+      if (err.message?.includes('UserDoesNotExist') || err.message?.includes('User does not exist') || err.code === 'BAD_DATA') {
         setUserInfo(null);
         if (typeof window !== 'undefined') {
           localStorage.removeItem('userInfo');

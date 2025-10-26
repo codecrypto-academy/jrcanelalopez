@@ -72,6 +72,33 @@ if [ -f "./deployments/local.json" ]; then
     CONTRACT_ADDRESS=$(jq -r '.SupplyChain' ./deployments/local.json)
     echo -e "${GREEN}Contract deployed at: $CONTRACT_ADDRESS${NC}"
     echo ""
+
+    # Actualizar .env.local del frontend
+    ENV_FILE="../web/.env.local"
+    if [ -f "$ENV_FILE" ]; then
+        echo "Actualizando $ENV_FILE..."
+
+        # Usar sed para reemplazar la dirección del contrato
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            # macOS
+            sed -i '' "s|NEXT_PUBLIC_CONTRACT_ADDRESS=.*|NEXT_PUBLIC_CONTRACT_ADDRESS=$CONTRACT_ADDRESS|" "$ENV_FILE"
+        else
+            # Linux
+            sed -i "s|NEXT_PUBLIC_CONTRACT_ADDRESS=.*|NEXT_PUBLIC_CONTRACT_ADDRESS=$CONTRACT_ADDRESS|" "$ENV_FILE"
+        fi
+
+        echo -e "${GREEN}✓${NC} Frontend .env.local actualizado"
+        echo -e "${YELLOW}⚠ Recuerda reiniciar el servidor de Next.js para que tome efecto${NC}"
+        echo ""
+    else
+        echo -e "${YELLOW}Warning: No se encontró $ENV_FILE${NC}"
+        echo "Crea el archivo con:"
+        echo "  NEXT_PUBLIC_CONTRACT_ADDRESS=$CONTRACT_ADDRESS"
+        echo "  NEXT_PUBLIC_CHAIN_ID=31337"
+        echo "  NEXT_PUBLIC_RPC_URL=http://localhost:8545"
+        echo ""
+    fi
+
     echo "Para interactuar con el contrato:"
     echo "  ./test-supply-chain.sh"
 else

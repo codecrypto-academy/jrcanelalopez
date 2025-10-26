@@ -4,7 +4,7 @@
  * Handles execution of forge, cast, and anvil commands
  */
 
-import { spawn, ChildProcess } from 'child_process';
+import { spawn, execSync, ChildProcess } from 'child_process';
 import { FoundryCommand, CommandResult } from './types.js';
 
 export class FoundryExecutor {
@@ -157,22 +157,40 @@ export class FoundryExecutor {
    * Stop Anvil if running
    */
   stopAnvil(): CommandResult {
-    if (!this.anvilProcess) {
+    // First try to stop tracked process
+    if (this.anvilProcess) {
+      this.anvilProcess.kill('SIGTERM');
+      this.anvilProcess = null;
+      this.anvilLogs = [];
+
       return {
-        success: false,
-        output: '',
-        error: 'Anvil is not running',
-        exitCode: -1,
+        success: true,
+        output: 'Anvil stopped successfully (MCP-managed process)',
+        exitCode: 0,
       };
     }
 
-    this.anvilProcess.kill('SIGTERM');
-    this.anvilProcess = null;
+    // If not tracked, try to stop any running anvil process
+    try {
+      const pid = execSync('pgrep -x anvil', { encoding: 'utf-8' }).trim();
+
+      if (pid) {
+        execSync(`kill -TERM ${pid}`);
+        return {
+          success: true,
+          output: `Anvil stopped successfully (PID: ${pid})\nNote: Anvil was started outside of MCP`,
+          exitCode: 0,
+        };
+      }
+    } catch (error) {
+      // Ignore error - process might not exist
+    }
 
     return {
-      success: true,
-      output: 'Anvil stopped successfully',
-      exitCode: 0,
+      success: false,
+      output: '',
+      error: 'Anvil is not running',
+      exitCode: -1,
     };
   }
 
@@ -180,16 +198,45 @@ export class FoundryExecutor {
    * Check if Anvil is running
    */
   isAnvilRunning(): boolean {
-    return this.anvilProcess !== null && !this.anvilProcess.killed;
+    // First check if we have a tracked process
+    if (this.anvilProcess !== null && !this.anvilProcess.killed) {
+      return true;
+    }
+
+    // If not tracked, check if anvil is running in the system
+    try {
+      const result = execSync('pgrep -x anvil', { encoding: 'utf-8' }).trim();
+      return result.length > 0;
+    } catch (error) {
+      // pgrep returns non-zero exit code if no process found
+      return false;
+    }
   }
 
   /**
    * Get Anvil logs
    */
   getAnvilLogs(lastN?: number): string {
-    if (lastN) {
-      return this.anvilLogs.slice(-lastN).join('\n');
+    // If we have tracked logs, return them
+    if (this.anvilLogs.length > 0) {
+      if (lastN) {
+        return this.anvilLogs.slice(-lastN).join('\n');
+      }
+      return this.anvilLogs.join('\n');
     }
-    return this.anvilLogs.join('\n');
+
+    // If Anvil is running but not tracked, get process info
+    try {
+      const pid = execSync('pgrep -x anvil', { encoding: 'utf-8' }).trim();
+
+      if (pid) {
+        const psOutput = execSync(`ps -p ${pid} -o command=`, { encoding: 'utf-8' }).trim();
+        return `Anvil is running (PID: ${pid})\nCommand: ${psOutput}\n\nNote: Anvil was started outside of MCP, so detailed logs are not available.\nUse 'anvil_stop' to stop it, or start Anvil with 'anvil_start' to capture logs.`;
+      }
+    } catch (error) {
+      // Ignore error
+    }
+
+    return 'No logs available';
   }
 }

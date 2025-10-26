@@ -14,17 +14,19 @@ export function Navbar() {
   const getNavItems = () => {
     if (!isConnected || !userInfo) return [];
 
-    const items = [
+    // Admin-only navigation
+    if (isAdmin) {
+      return [
+        { name: 'Admin Panel', href: '/admin/users', icon: '⚙️' },
+      ];
+    }
+
+    // Regular users navigation
+    return [
       { name: 'Dashboard', href: '/dashboard', icon: '🏠' },
       { name: 'My Tokens', href: '/tokens', icon: '🪙' },
       { name: 'Transfers', href: '/transfers', icon: '↔️' },
     ];
-
-    if (isAdmin) {
-      items.push({ name: 'Admin Panel', href: '/admin/users', icon: '⚙️' });
-    }
-
-    return items;
   };
 
   const navItems = getNavItems();
@@ -35,7 +37,7 @@ export function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link
-            href={isConnected && userInfo ? '/dashboard' : '/'}
+            href={isConnected && userInfo ? (isAdmin ? '/admin/users' : '/dashboard') : '/'}
             className="flex items-center space-x-2"
           >
             <span className="text-2xl">⛓️</span>

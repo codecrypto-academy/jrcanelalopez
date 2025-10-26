@@ -285,8 +285,56 @@ export default function Home() {
               </div>
             )}
 
-            {/* Approved - Show Dashboard Link */}
-            {isConnected && isApproved && (
+            {/* Approved - Admin */}
+            {isConnected && isApproved && isAdmin && (
+              <div className="text-center">
+                <div className="mb-6">
+                  <svg
+                    className="mx-auto h-24 w-24 text-purple-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
+                  Welcome, Administrator!
+                </h2>
+                <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4 mb-6">
+                  <p className="text-purple-800 dark:text-purple-200">
+                    Your account is approved and ready to manage the system
+                  </p>
+                </div>
+                <button
+                  onClick={() => router.push('/admin/users')}
+                  className="w-full px-8 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors inline-flex items-center justify-center"
+                >
+                  <svg
+                    className="w-5 h-5 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                    />
+                  </svg>
+                  Go to Admin Panel
+                </button>
+              </div>
+            )}
+
+            {/* Approved - Regular User */}
+            {isConnected && isApproved && !isAdmin && (
               <div className="text-center">
                 <div className="mb-6">
                   <svg
@@ -311,35 +359,12 @@ export default function Home() {
                     Your account is approved and ready to use
                   </p>
                 </div>
-                <div className="space-y-3">
-                  <button
-                    onClick={() => router.push('/dashboard')}
-                    className="w-full px-8 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
-                  >
-                    Go to Dashboard
-                  </button>
-                  {isAdmin && (
-                    <button
-                      onClick={() => router.push('/admin/users')}
-                      className="w-full px-8 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors inline-flex items-center justify-center"
-                    >
-                      <svg
-                        className="w-5 h-5 mr-2"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                        />
-                      </svg>
-                      Admin Panel
-                    </button>
-                  )}
-                </div>
+                <button
+                  onClick={() => router.push('/dashboard')}
+                  className="w-full px-8 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
+                >
+                  Go to Dashboard
+                </button>
               </div>
             )}
           </div>

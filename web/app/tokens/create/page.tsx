@@ -30,6 +30,10 @@ export default function CreateTokenPage() {
     if (!isLoading && (!isConnected || !userInfo)) {
       router.push('/');
     }
+    // Redirect admin to admin panel
+    if (!isLoading && userInfo && userInfo.role === 'Admin') {
+      router.push('/admin/users');
+    }
   }, [isConnected, userInfo, isLoading, router]);
 
   // Load available tokens for parentId
