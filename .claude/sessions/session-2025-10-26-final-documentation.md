@@ -83,7 +83,7 @@ Según CHECKLIST_STATUS.md (última actualización: 23 de octubre de 2025):
 5. ✅ Actualizar IA.md con sesión 3a (MCP morning)
 6. ✅ Recalcular métricas totales (tiempo, tokens, archivos)
 7. ✅ Actualizar .claude/sessions/README.md
-8. ⬜ Commit y push de todos los cambios
+8. ✅ Commit y push de todos los cambios
 
 ---
 
@@ -251,13 +251,13 @@ Según CHECKLIST_STATUS.md (última actualización: 23 de octubre de 2025):
 
 ## Próximos Pasos
 
-### Completado (Esta Sesión)
+### ✅ Completado (Esta Sesión)
 1. ✅ Crear página de profile completa
 2. ✅ Actualizar README.md con Quick Start
 3. ✅ Actualizar CHECKLIST_STATUS.md
 4. ✅ Actualizar IA.md con sesión 3a y 8
 5. ✅ Actualizar README de sesiones
-6. ⬜ Commit y push de cambios
+6. ✅ Commit y push de cambios (commit: dc5870d)
 
 ### Siguiente Sesión (Sesión 9 - Video Demo)
 1. ⬜ Grabar video demo siguiendo video/SCRIPT.md
