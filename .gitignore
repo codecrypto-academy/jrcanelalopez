@@ -33,9 +33,9 @@ web/.pnp.js
 
 # Testing
 web/coverage
-web/test-results/
-web/playwright-report/
-web/.playwright/
+
+# Synpress cache (should not be committed)
+web/.cache-synpress/
 
 # Next.js
 web/.next/
@@ -117,8 +117,3 @@ secrets/
 # Usage logs pueden ser privados
 .claude/agents/usage-log.json
 .claude/settings.local.json
-
-# ============ Synpress (E2E Testing) ============
-
-# Synpress wallet cache directory
-.cache-synpress/

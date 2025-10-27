@@ -9,7 +9,7 @@
 1. [Introducción](#introducción)
 2. [Estructura de Testing](#estructura-de-testing)
 3. [Smart Contract Testing](#smart-contract-testing)
-4. [Frontend E2E Testing](#frontend-e2e-testing)
+4. [Tests de Integración Frontend-Blockchain](#tests-de-integración-frontend-blockchain)
 5. [Comandos Rápidos](#comandos-rápidos)
 6. [Mejores Prácticas](#mejores-prácticas)
 7. [Troubleshooting](#troubleshooting)
@@ -22,17 +22,17 @@
 Este proyecto implementa una **estrategia de testing completa** que cubre:
 
 - **Tests Unitarios del Smart Contract** (Foundry)
-- **Tests de Integración** (Foundry)
-- **Tests End-to-End del Frontend** (Playwright + Synpress)
-- **Tests Multi-Wallet** (Admin, Producer, Factory, Retailer, Consumer)
+- **Tests de Integración Smart Contract** (Foundry)
+- **Tests de Integración Frontend-Blockchain** (ethers.js + Foundry CLI)
+- **Tests Multi-Rol** (Admin, Producer, Factory, Retailer, Consumer)
 
 ### Stack de Testing
 
 | Componente | Herramienta | Propósito |
 |-----------|-------------|-----------|
 | Smart Contract | **Foundry** | Tests unitarios y cobertura |
-| E2E Frontend | **Playwright** | Tests de UI sin wallet |
-| E2E Web3 | **Synpress** | Tests con MetaMask |
+| Integración Frontend | **ethers.js v6** | Interacción con blockchain |
+| CLI Blockchain | **Foundry CLI (cast)** | Comandos directos de blockchain |
 | Blockchain Local | **Anvil** | Red de pruebas local |
 
 ---
@@ -48,20 +48,12 @@ web3-98_pfm_traza_2025/
 │   ├── test-supply-chain.sh        # Script de tests rápidos
 │   └── test-quick.sh               # Tests específicos
 │
-├── web/                             # Frontend Tests
-│   ├── e2e/
-│   │   ├── wallet-setup/           # Configuración de wallets
-│   │   │   ├── admin.setup.ts
-│   │   │   ├── producer.setup.ts
-│   │   │   ├── factory.setup.ts
-│   │   │   ├── retailer.setup.ts
-│   │   │   └── consumer.setup.ts
-│   │   ├── landing-page.spec.ts    # Tests de UI
-│   │   ├── auto-registration.spec.ts
-│   │   ├── admin-approval.spec.ts
-│   │   └── complete-supply-chain-flow.spec.ts
-│   ├── setup-e2e.sh                # Setup automático de E2E
-│   └── playwright.config.ts        # Configuración Playwright
+├── web/                             # Frontend
+│   └── test/                        # Tests de Integración
+│       ├── test-self-registration.mjs         # Auto-registro con cast
+│       ├── test-frontend-flow.mjs             # Flujo frontend completo
+│       ├── test-multiple-roles-approval.mjs   # Test múltiples roles
+│       └── test-user-rejection.mjs            # Test rechazo usuarios
 │
 ├── .claude/
 │   ├── commands/
@@ -70,8 +62,7 @@ web3-98_pfm_traza_2025/
 │   │   └── create-test.md          # Comando: Crear test
 │   └── agents/
 │       ├── testing-expert.md       # Agente: Smart Contract Testing
-│       ├── playwright-e2e-expert.md # Agente: E2E Testing
-│       └── PLAYWRIGHT_E2E_GUIDE.md # Guía completa E2E
+│       └── debug-detective.md      # Agente: Debugging
 │
 └── TESTING.md                       # Este archivo
 ```
@@ -222,86 +213,108 @@ slither sc/src/SupplyChain.sol
 
 ---
 
-## Frontend E2E Testing
+## Tests de Integración Frontend-Blockchain
 
-### Tipos de Tests E2E
+### Tipos de Tests de Integración
 
-#### 1. Tests de UI (Sin Wallet)
+El proyecto incluye **4 tests de integración JavaScript** que verifican la interacción entre el frontend y el smart contract usando **ethers.js** y **Foundry CLI (cast)**.
 
-**Archivo**: `web/e2e/landing-page.spec.ts`
+#### 1. Self-Registration Test
 
-```typescript
-test('should display landing page correctly', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-});
-```
+**Archivo**: `web/test/test-self-registration.mjs`
 
-**Ejecutar**:
-```bash
-cd web
-npm run test:e2e:landing
-```
+**Tecnología**: Foundry CLI (`cast`)
 
-#### 2. Tests con MetaMask (Synpress)
+**Descripción**: Prueba el auto-registro de múltiples usuarios y su aprobación por el admin.
 
-**Archivo**: `web/e2e/auto-registration.spec.ts`
-
-```typescript
-test('should register new user', async ({ page, metamask }) => {
-  await page.goto('/');
-  await page.click('button:has-text("Connect MetaMask")');
-  await metamask.connectToDapp();
-  // ... rest of test
-});
-```
+**Flujo**:
+1. Verificar que el admin está configurado correctamente
+2. Producer, Factory y Retailer se auto-registran vía `requestUserRole()`
+3. Admin aprueba a todos los usuarios vía `changeStatusUser()`
+4. Verificar que todos tengan estado Approved
 
 **Ejecutar**:
 ```bash
-cd web
-npm run test:e2e:registration
+npm run test:self-registration
 ```
 
-#### 3. Tests Multi-Wallet
+#### 2. Frontend Flow Test
 
-**Archivo**: `web/e2e/complete-supply-chain-flow.spec.ts`
+**Archivo**: `web/test/test-frontend-flow.mjs`
 
-Simula el flujo completo con 5 wallets:
-- Admin: Registra usuarios
-- Producer: Crea materia prima
-- Factory: Procesa y crea productos
-- Retailer: Distribuye productos
-- Consumer: Recibe productos finales
+**Tecnología**: ethers.js v6
+
+**Descripción**: Simula el flujo completo de un usuario desde el frontend.
+
+**Flujo**:
+1. Usuario no-admin solicita registrarse como Producer
+2. Sistema registra al usuario con estado Pending
+3. Admin aprueba la solicitud
+4. Usuario reconecta y sistema lo reconoce como Producer aprobado
 
 **Ejecutar**:
 ```bash
-cd web
-npm run test:e2e:flow
+npm run test:frontend-flow
 ```
 
-### Setup de E2E Testing
+#### 3. Multiple Roles Test
+
+**Archivo**: `web/test/test-multiple-roles-approval.mjs`
+
+**Tecnología**: ethers.js v6
+
+**Descripción**: Prueba el registro y aprobación de 4 roles simultáneamente.
+
+**Flujo**:
+1. Producer, Factory, Retailer y Consumer solicitan registro
+2. Admin aprueba a los 4 usuarios
+3. Cada usuario reconecta y sistema verifica su rol correcto
+
+**Ejecutar**:
+```bash
+npm run test:multiple-roles
+```
+
+**⚠️ Nota**: Este test requiere que los usuarios no estén previamente registrados. Ejecutar con Anvil limpio.
+
+#### 4. User Rejection Test
+
+**Archivo**: `web/test/test-user-rejection.mjs`
+
+**Tecnología**: ethers.js v6
+
+**Descripción**: Verifica el flujo de rechazo de usuarios por parte del admin.
+
+**Flujo**:
+1. Usuario solicita registro
+2. Admin rechaza la solicitud (status Rejected)
+3. Usuario intenta operar y es bloqueado
+4. Verificar que usuario rechazado no puede crear tokens ni transferir
+
+**Ejecutar**:
+```bash
+npm run test:user-rejection
+```
+
+### Setup de Tests de Integración
 
 #### Primera Vez (Setup Completo)
 
 ```bash
-cd web
-
-# 1. Instalar dependencias
+# 1. Instalar dependencias en el root
 npm install
 
-# 2. Instalar Playwright
-npm run playwright:install
+# 2. Instalar dependencias del frontend
+cd web
+npm install
 
-# 3. Configurar E2E (crea caches de wallets)
-npm run test:e2e:setup
-
-# 4. Verificar instalación
-npm run test:e2e:landing
+# 3. Verificar que ethers.js está instalado
+npm list ethers
 ```
 
 #### Requisitos Previos
 
-Antes de ejecutar tests E2E:
+Antes de ejecutar tests de integración:
 
 ```bash
 # Terminal 1: Blockchain local
@@ -310,98 +323,98 @@ anvil
 
 # Terminal 2: Desplegar contrato
 cd sc
-./deploy-local.sh
+PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
+  forge script script/Deploy.s.sol --rpc-url http://localhost:8545 --broadcast
 
-# Terminal 3: Frontend
-cd web
-npm run dev
-
-# Terminal 4: Tests
-cd web
-npm run test:e2e
+# La dirección del contrato desplegado debe ser: 0x5FbDB2315678afecb367f032d93F642f64180aa3
 ```
 
-### Comandos de Testing E2E
+### Comandos de Testing de Integración
 
 ```bash
-# Tests E2E completos
-npm run test:e2e
+# Ejecutar todos los tests (puede tener conflictos por usuarios registrados)
+npm test
 
-# Tests con UI interactiva
-npm run test:e2e:ui
-
-# Tests con navegador visible
-npm run test:e2e:headed
-
-# Tests específicos
-npm run test:e2e:landing      # Landing page
-npm run test:e2e:registration  # Auto-registro
-npm run test:e2e:admin        # Aprobación admin
-npm run test:e2e:flow         # Flujo completo
-
-# Ver reportes
-npm run playwright:report
+# Tests individuales (recomendado)
+npm run test:self-registration  # Test con cast CLI
+npm run test:frontend-flow      # Test flujo frontend
+npm run test:multiple-roles     # Test múltiples roles
+npm run test:user-rejection     # Test rechazo de usuarios
 ```
 
-### Configuración de Wallets
+**⚠️ Advertencia**: Ejecutar todos los tests en secuencia puede causar conflictos porque algunos tests registran los mismos usuarios. Se recomienda ejecutarlos individualmente con Anvil limpio.
 
-Los wallets de prueba están en `web/e2e/wallet-setup/`:
-
-```typescript
-// admin.setup.ts
-export default async function () {
-  return {
-    name: 'Admin Wallet',
-    privateKey: '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
-    // ... configuración
-  };
-}
-```
-
-**Cuentas de Anvil**:
-- Admin: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`
-- Producer: `0x70997970C51812dc3A010C7d01b50e0d17dc79C8`
-- Factory: `0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC`
-- Retailer: `0x90F79bf6EB2c4f870365E785982E1f101E93b906`
-- Consumer: `0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65`
-
-### Debugging Tests E2E
-
-#### Mode Headed (Ver Navegador)
+#### Ejecutar Test Individual con Estado Limpio
 
 ```bash
-npm run test:e2e:headed
+# Terminal 1: Reiniciar Anvil
+kill $(lsof -t -i:8545) && cd sc && anvil
+
+# Terminal 2: Redesplegar contrato
+cd sc
+PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
+  forge script script/Deploy.s.sol --rpc-url http://localhost:8545 --broadcast
+
+# Terminal 3: Ejecutar test
+cd ..
+npm run test:self-registration
 ```
 
-#### Con Traces
+### Cuentas de Anvil para Tests
+
+Los tests utilizan las cuentas predeterminadas de Anvil:
+
+**Cuentas Principales**:
+- **Admin**: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` (Account #0)
+- **Producer**: `0x70997970C51812dc3A010C7d01b50e0d17dc79C8` (Account #1)
+- **Factory**: `0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC` (Account #2)
+- **Retailer**: `0x90F79bf6EB2c4f870365E785982E1f101E93b906` (Account #3)
+- **Consumer**: `0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65` (Account #4)
+
+**Cuentas de Test** (usadas por test-multiple-roles y test-frontend-flow):
+- **Account #6**: `0x14dC79964da2C08b23698B3D3cc7Ca32193d9955`
+- **Account #7**: `0x976EA74026E726554dB657fA54763abd0C3a0aa9`
+- **Account #8**: `0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f`
+- **Account #5**: `0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc`
+
+### Debugging Tests de Integración
+
+#### Ver Output Detallado
+
+Los tests ya incluyen output colorizado con información detallada de cada paso.
+
+#### Verificación Manual con cast
+
+Puedes verificar el estado del contrato manualmente:
 
 ```bash
-# Ejecutar con trace
-npm run test:e2e -- --trace on
+# Verificar si un usuario está registrado
+cast call 0x5FbDB2315678afecb367f032d93F642f64180aa3 \
+  "getUserInfo(address)" \
+  0x976EA74026E726554dB657fA54763abd0C3a0aa9 \
+  --rpc-url http://localhost:8545
 
-# Ver trace después
-npx playwright show-trace trace.zip
+# Verificar si una dirección es admin
+cast call 0x5FbDB2315678afecb367f032d93F642f64180aa3 \
+  "isAdmin(address)(bool)" \
+  0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 \
+  --rpc-url http://localhost:8545
+
+# Ver eventos del contrato
+cast logs \
+  --address 0x5FbDB2315678afecb367f032d93F642f64180aa3 \
+  "UserRoleRequested(address,string)" \
+  --rpc-url http://localhost:8545
 ```
 
-#### Debug Mode
+### Estructura de los Tests
 
-```bash
-# Modo debug interactivo
-npm run test:e2e -- --debug
+Los tests están escritos en JavaScript modular (`.mjs`) y utilizan:
 
-# Solo un test
-npx playwright test e2e/landing-page.spec.ts --debug
-```
-
-### Agente Especializado
-
-Para problemas complejos de E2E, usa el agente especializado:
-
-```
-Usa el agente "Playwright E2E Expert" para [TU_PROBLEMA]
-```
-
-Ver: [`.claude/agents/PLAYWRIGHT_E2E_GUIDE.md`](.claude/agents/PLAYWRIGHT_E2E_GUIDE.md)
+- **ethers.js v6**: Para interactuar con el smart contract (tests-frontend-flow, test-multiple-roles, test-user-rejection)
+- **Foundry CLI (cast)**: Para comandos directos de blockchain (test-self-registration)
+- **Node.js**: Como runtime
+- **Anvil RPC**: Blockchain local (http://localhost:8545, Chain ID: 31337)
 
 ---
 
@@ -429,29 +442,22 @@ forge test --match-contract SupplyChainTest
 /create-test                 # Crear nuevo test
 ```
 
-### Frontend E2E
+### Tests de Integración Frontend-Blockchain
 
 ```bash
-# Setup inicial
-npm run test:e2e:setup      # Primera vez
-npm run playwright:install  # Solo Playwright
+# Ejecutar todos los tests (puede tener conflictos)
+npm test
 
-# Ejecutar tests
-npm run test:e2e            # Todos los tests
-npm run test:e2e:ui         # UI interactiva
-npm run test:e2e:headed     # Con navegador visible
+# Tests individuales (recomendado)
+npm run test:self-registration  # Auto-registro con cast
+npm run test:frontend-flow      # Flujo completo frontend
+npm run test:multiple-roles     # Test 4 roles simultáneos
+npm run test:user-rejection     # Test rechazo de usuarios
 
-# Tests específicos
-npm run test:e2e:landing    # Landing page
-npm run test:e2e:flow       # Flujo completo
-
-# Debugging
-npm run test:e2e -- --debug             # Modo debug
-npm run test:e2e -- --trace on          # Con traces
-npx playwright show-trace trace.zip     # Ver trace
-
-# Reportes
-npm run playwright:report   # Ver últimos resultados
+# Debugging manual con cast
+cast call <CONTRACT_ADDR> "getUserInfo(address)" <USER_ADDR> --rpc-url http://localhost:8545
+cast call <CONTRACT_ADDR> "isAdmin(address)(bool)" <ADMIN_ADDR> --rpc-url http://localhost:8545
+cast logs --address <CONTRACT_ADDR> "UserRoleRequested(address,string)" --rpc-url http://localhost:8545
 ```
 
 ### Testing Completo (CI/CD)
@@ -470,8 +476,10 @@ forge coverage
 cd ../web
 npm run build
 
-# 3. Tests E2E (requiere servicios corriendo)
-npm run test:e2e
+# 3. Tests de Integración (requiere Anvil y contrato desplegado)
+cd ..
+npm run test:self-registration
+npm run test:frontend-flow
 
 echo "✅ Todos los tests pasaron"
 ```
@@ -518,39 +526,46 @@ echo "✅ Todos los tests pasaron"
 3. ❌ Hardcodear direcciones (usar variables)
 4. ❌ Tests sin verificar eventos importantes
 
-### E2E Testing
+### Tests de Integración
 
 #### ✅ Hacer
 
-1. **Tests independientes**
-   ```typescript
-   test.beforeEach(async ({ page }) => {
-     // Reset estado antes de cada test
-   });
+1. **Ejecutar con Anvil limpio**
+   ```bash
+   kill $(lsof -t -i:8545) && cd sc && anvil
    ```
 
-2. **Waits explícitos**
-   ```typescript
-   await page.waitForSelector('button:has-text("Connect")');
-   await page.click('button:has-text("Connect")');
+2. **Verificar estado antes de test**
+   ```javascript
+   const userInfo = await contract.getUserInfo(userAddress);
+   if (userInfo) {
+     console.log('Usuario ya registrado, se reutilizará');
+   }
    ```
 
-3. **Verificaciones específicas**
-   ```typescript
-   await expect(page.locator('text=Success')).toBeVisible();
+3. **Usar async/await correctamente**
+   ```javascript
+   const tx = await contract.requestUserRole('Producer');
+   await tx.wait();  // Esperar confirmación
    ```
 
-4. **Tests secuenciales para blockchain**
-   ```typescript
-   test.describe.configure({ mode: 'serial' });
+4. **Manejar errores de contrato**
+   ```javascript
+   try {
+     await contract.requestUserRole('Producer');
+   } catch (err) {
+     if (err.message.includes('UserAlreadyRegistered')) {
+       console.log('Usuario ya existe');
+     }
+   }
    ```
 
 #### ❌ No Hacer
 
-1. ❌ Tests sin cleanup
-2. ❌ Hardcodear timeouts
-3. ❌ Tests sin verificar estado de blockchain
-4. ❌ Ignorar errores de transacciones
+1. ❌ Ejecutar múltiples tests en secuencia sin limpiar estado
+2. ❌ Ignorar confirmaciones de transacciones
+3. ❌ Hardcodear direcciones sin verificar
+4. ❌ Asumir que el usuario no existe sin verificar
 
 ### Cobertura de Tests
 
@@ -620,25 +635,22 @@ forge coverage
 forge coverage --report lcov
 ```
 
-### E2E Tests
+### Tests de Integración
 
-#### "Cache does not exist"
+#### "Cannot find module 'ethers'"
 
-**Síntoma**: Error al ejecutar tests E2E
+**Síntoma**: Error al ejecutar tests de integración
 
 **Solución**:
 ```bash
-# Recrear caches
-npm run test:e2e:setup
-
-# O manualmente
-rm -rf .cache-synpress
-npx synpress e2e/wallet-setup --debug
+# Instalar dependencias
+npm install
+cd web && npm install
 ```
 
-#### MetaMask no se conecta
+#### "Connection refused" o "ECONNREFUSED"
 
-**Síntoma**: Tests fallan en conectar wallet
+**Síntoma**: Tests no pueden conectar con Anvil
 
 **Verificar**:
 ```bash
@@ -646,40 +658,36 @@ npx synpress e2e/wallet-setup --debug
 lsof -ti:8545  # Debe devolver un PID
 
 # 2. Contrato está desplegado
-cast code <CONTRACT_ADDRESS> --rpc-url http://localhost:8545
-
-# 3. Frontend está corriendo
-lsof -ti:3000  # Debe devolver un PID
+cast code 0x5FbDB2315678afecb367f032d93F642f64180aa3 --rpc-url http://localhost:8545
 ```
 
 **Solución**:
 ```bash
-# Terminal 1
+# Terminal 1: Iniciar Anvil
 cd sc && anvil
 
-# Terminal 2
-cd sc && ./deploy-local.sh
+# Terminal 2: Desplegar contrato
+cd sc
+PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
+  forge script script/Deploy.s.sol --rpc-url http://localhost:8545 --broadcast
 
-# Terminal 3
-cd web && npm run dev
-
-# Terminal 4
-cd web && npm run test:e2e
+# Terminal 3: Ejecutar test
+cd ..
+npm run test:self-registration
 ```
 
-#### Tests muy lentos
+#### "execution reverted: UserAlreadyRegistered"
 
-**Síntoma**: Tests tardan >5 minutos
+**Síntoma**: Test falla porque el usuario ya está registrado
 
 **Solución**:
-```typescript
-// playwright.config.ts
-export default defineConfig({
-  timeout: 30000,  // Reducir timeout global
-  expect: {
-    timeout: 5000  // Timeout de assertions
-  }
-});
+```bash
+# Reiniciar Anvil para limpiar estado
+kill $(lsof -t -i:8545) && cd sc && anvil
+
+# Redesplegar contrato
+PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
+  forge script script/Deploy.s.sol --rpc-url http://localhost:8545 --broadcast
 ```
 
 ### Errores Comunes
@@ -700,13 +708,12 @@ export default defineConfig({
 
 - **Smart Contract**: [`sc/src/SupplyChain.sol`](sc/src/SupplyChain.sol)
 - **Tests SC**: [`sc/test/SupplyChain.t.sol`](sc/test/SupplyChain.t.sol)
+- **Tests Integración**: [`web/test/`](web/test/)
 - **Guía Principal**: [`CLAUDE.md`](CLAUDE.md)
-- **Guía E2E**: [`.claude/agents/PLAYWRIGHT_E2E_GUIDE.md`](.claude/agents/PLAYWRIGHT_E2E_GUIDE.md)
 
 ### Agentes Especializados
 
 - **Testing Expert**: [`.claude/agents/testing-expert.md`](.claude/agents/testing-expert.md)
-- **Playwright E2E Expert**: [`.claude/agents/playwright-e2e-expert.md`](.claude/agents/playwright-e2e-expert.md)
 - **Security Auditor**: [`.claude/agents/security-auditor.md`](.claude/agents/security-auditor.md)
 - **Debug Detective**: [`.claude/agents/debug-detective.md`](.claude/agents/debug-detective.md)
 
@@ -721,9 +728,9 @@ export default defineConfig({
 ### Documentación Externa
 
 - **Foundry Book**: https://book.getfoundry.sh/
-- **Playwright Docs**: https://playwright.dev/
-- **Synpress Docs**: https://docs.synpress.io/
+- **ethers.js v6**: https://docs.ethers.org/v6/
 - **Solidity Testing**: https://docs.soliditylang.org/en/latest/testing.html
+- **Anvil**: https://book.getfoundry.sh/anvil/
 
 ### Scripts del Proyecto
 
@@ -734,9 +741,11 @@ sc/test-quick.sh             # Tests específicos
 sc/deploy-local.sh           # Deploy en Anvil
 sc/start-anvil.sh            # Iniciar Anvil
 
-# Frontend
-web/setup-e2e.sh             # Setup E2E testing
-web/package.json             # Ver scripts npm disponibles
+# Tests de Integración
+npm run test:self-registration  # Test auto-registro
+npm run test:frontend-flow      # Test flujo frontend
+npm run test:multiple-roles     # Test múltiples roles
+npm run test:user-rejection     # Test rechazo usuarios
 ```
 
 ---
@@ -752,16 +761,16 @@ Antes de hacer commit/push, verifica:
 - [ ] Tests cubren casos edge
 - [ ] Tests cubren reversiones
 
-### Frontend E2E
-- [ ] `npm run test:e2e:landing` pasa
-- [ ] `npm run test:e2e:flow` pasa
-- [ ] Tests son independientes
-- [ ] Caches de wallets creados
+### Tests de Integración
+- [ ] `npm run test:self-registration` pasa
+- [ ] `npm run test:frontend-flow` pasa
+- [ ] Tests se ejecutan con Anvil limpio
+- [ ] Contrato desplegado correctamente
 - [ ] No hay tests flakey
 
-### Integración
+### Integración Frontend
 - [ ] Anvil corriendo
-- [ ] Contrato desplegado correctamente
+- [ ] Contrato desplegado en dirección correcta
 - [ ] Frontend conecta con MetaMask
 - [ ] Flujo completo funciona
 - [ ] No hay errores en consola
@@ -785,22 +794,24 @@ Antes de hacer commit/push, verifica:
 4. Ejecutar: `forge test -vvv`
 5. Verificar cobertura: `forge coverage`
 
-### Agregar Test E2E
+### Agregar Test de Integración
 
-1. Crear archivo en `web/e2e/` con sufijo `.spec.ts`
-2. Importar Playwright:
-   ```typescript
-   import { test, expect } from '@playwright/test';
+1. Crear archivo en `web/test/` con sufijo `.mjs`
+2. Importar ethers.js:
+   ```javascript
+   import { ethers } from 'ethers';
+   import { readFileSync } from 'fs';
    ```
 3. Estructurar test:
-   ```typescript
-   test.describe('Feature Name', () => {
-     test('should do something', async ({ page }) => {
-       // Test implementation
-     });
-   });
+   ```javascript
+   async function runTest() {
+     const provider = new ethers.JsonRpcProvider('http://localhost:8545');
+     const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+     // Test implementation
+   }
+   runTest();
    ```
-4. Ejecutar: `npm run test:e2e`
+4. Ejecutar: `npm run test:nombre-del-test`
 
 ### Template Pull Request
 
@@ -812,10 +823,10 @@ Antes de hacer commit/push, verifica:
 - [ ] Cobertura actual: X%
 - [ ] Todos los tests pasan
 
-### E2E
-- [ ] Nuevos tests agregados en `web/e2e/`
-- [ ] Tests E2E pasan en local
-- [ ] Caches recreados si es necesario
+### Tests de Integración
+- [ ] Nuevos tests agregados en `web/test/`
+- [ ] Tests de integración pasan en local
+- [ ] Anvil y contrato desplegado correctamente
 
 ### Checklist
 - [ ] Tests documentados
@@ -867,15 +878,17 @@ Antes de hacer commit/push, verifica:
 | `unpause` | 1 | 100% | Alta |
 | **TOTAL** | **22+** | **>90%** | - |
 
-### Frontend E2E - Flujos
+### Tests de Integración Frontend-Blockchain
 
-| Flujo | Tests | Estado | Archivos |
-|-------|-------|--------|----------|
-| Landing Page | 4 | ✅ | `landing-page.spec.ts` |
-| Auto Registration | 3 | ✅ | `auto-registration.spec.ts` |
-| Admin Approval | 3 | ✅ | `admin-approval.spec.ts` |
-| Supply Chain Flow | 1 | ✅ | `complete-supply-chain-flow.spec.ts` |
-| **TOTAL** | **11** | **✅** | - |
+| Test | Tecnología | Estado | Archivo |
+|------|-----------|--------|---------|
+| Self-Registration | cast CLI | ✅ | `test-self-registration.mjs` |
+| Frontend Flow | ethers.js | ✅ | `test-frontend-flow.mjs` |
+| Multiple Roles | ethers.js | ✅ | `test-multiple-roles-approval.mjs` |
+| User Rejection | ethers.js | ✅ | `test-user-rejection.mjs` |
+| **TOTAL** | **4** | **✅** | - |
+
+**Nota**: Los tests se ejecutan individualmente con Anvil limpio para evitar conflictos de estado.
 
 ---
 

@@ -21,7 +21,7 @@ const __dirname = dirname(__filename);
 
 // Configuration
 const RPC_URL = 'http://localhost:8545';
-const CONTRACT_ADDRESS = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
+const CONTRACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
 // Test accounts from Anvil
 const ADMIN = {
@@ -32,7 +32,7 @@ const ADMIN = {
 // Using Account 7 - Fresh account not used in previous tests
 const PRODUCER_CANDIDATE = {
   address: '0x976EA74026E726554dB657fA54763abd0C3a0aa9',
-  key: '0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356'
+  key: '0x92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e'
 };
 
 // Colors for console output
@@ -92,7 +92,7 @@ async function runTest() {
     producerSigner = new ethers.Wallet(PRODUCER_CANDIDATE.key, provider);
 
     // Load ABI
-    const abiPath = join(__dirname, 'web', 'contracts', 'SupplyChain.json');
+    const abiPath = join(__dirname, '..', 'contracts', 'SupplyChain.json');
     const abi = JSON.parse(readFileSync(abiPath, 'utf8'));
 
     contract = new ethers.Contract(CONTRACT_ADDRESS, abi, adminSigner);

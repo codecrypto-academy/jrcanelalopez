@@ -32,13 +32,13 @@ const ADMIN = {
 
 // Using Anvil accounts 5, 6, 7, 8 for testing
 const PRODUCER_CANDIDATE = {
-  address: '0x976EA74026E726554dB657fA54763abd0C3a0aa9', // Account #6
+  address: '0x976EA74026E726554dB657fA54763abd0C3a0aa9', // Account #7
   key: '0x92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e',
   role: 'Producer'
 };
 
 const FACTORY_CANDIDATE = {
-  address: '0x14dC79964da2C08b23698B3D3cc7Ca32193d9955', // Account #7
+  address: '0x14dC79964da2C08b23698B3D3cc7Ca32193d9955', // Account #6
   key: '0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356',
   role: 'Factory'
 };
@@ -120,7 +120,7 @@ async function runTest() {
     }
 
     // Load ABI
-    const abiPath = join(__dirname, 'web', 'contracts', 'SupplyChain.json');
+    const abiPath = join(__dirname, '..', 'contracts', 'SupplyChain.json');
     const abi = JSON.parse(readFileSync(abiPath, 'utf8'));
 
     contract = new ethers.Contract(CONTRACT_ADDRESS, abi, adminSigner);

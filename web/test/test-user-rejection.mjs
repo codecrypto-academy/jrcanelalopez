@@ -100,7 +100,7 @@ async function runTest() {
     userSigner = new ethers.Wallet(REJECTED_USER.key, provider);
 
     // Load ABI
-    const abiPath = join(__dirname, 'web', 'contracts', 'SupplyChain.json');
+    const abiPath = join(__dirname, '..', 'contracts', 'SupplyChain.json');
     const abi = JSON.parse(readFileSync(abiPath, 'utf8'));
 
     contract = new ethers.Contract(CONTRACT_ADDRESS, abi, adminSigner);
