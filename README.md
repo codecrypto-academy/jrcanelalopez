@@ -26,6 +26,135 @@
 
 ---
 
+## 📂 Estructura del Proyecto
+
+Este proyecto está organizado como un monorepo que integra smart contracts, frontend, herramientas de IA y documentación completa. A continuación se describe cada directorio principal:
+
+```
+web3-98_pfm_traza_2025/
+├── 📁 sc/                          # Smart Contracts (Solidity + Foundry)
+│   ├── src/                        # Código fuente del contrato
+│   │   └── SupplyChain.sol         # Contrato principal
+│   ├── test/                       # Tests unitarios (Foundry)
+│   │   └── SupplyChain.t.sol       # 22 tests (100% passing)
+│   ├── script/                     # Scripts de deployment
+│   │   └── Deploy.s.sol            # Script de despliegue
+│   ├── foundry.toml                # Configuración de Foundry
+│   ├── deploy-local.sh             # Script rápido de deploy en Anvil
+│   ├── test-quick.sh               # Tests rápidos
+│   └── test-supply-chain.sh        # Tests completos con coverage
+│
+├── 📁 web/                         # Frontend (Next.js 15 + TypeScript)
+│   ├── src/
+│   │   ├── app/                    # Páginas (App Router)
+│   │   │   ├── page.tsx            # Landing/Login
+│   │   │   ├── dashboard/          # Dashboard por rol
+│   │   │   ├── tokens/             # Gestión de tokens
+│   │   │   ├── transfers/          # Transferencias
+│   │   │   ├── admin/              # Panel de administración
+│   │   │   └── profile/            # Perfil de usuario
+│   │   ├── components/             # Componentes React reutilizables
+│   │   ├── contexts/               # Web3Provider y contextos
+│   │   ├── hooks/                  # Custom hooks (useWallet)
+│   │   ├── lib/                    # Servicios Web3
+│   │   └── contracts/              # ABI y configuración del contrato
+│   ├── package.json                # Dependencias Node.js
+│   └── tailwind.config.js          # Configuración de estilos
+│
+├── 📁 video/                       # Video de Presentación
+│   ├── Presentación 2025-10-26.mp4 # Video demo del proyecto (≤5 min)
+│   └── SCRIPT.md                   # Guión del video
+│
+├── 📁 .claude/                     # Configuración de Claude Code
+│   ├── agents/                     # 10 agentes especializados de IA
+│   │   ├── solidity-expert.md      # Experto en Smart Contracts
+│   │   ├── testing-expert.md       # Experto en Testing
+│   │   ├── frontend-architect.md   # Arquitecto Frontend
+│   │   └── ...                     # Más agentes especializados
+│   ├── commands/                   # 14 comandos slash personalizados
+│   │   ├── test-sc.md              # /test-sc - Ejecutar tests
+│   │   ├── deploy-local.md         # /deploy-local - Deploy rápido
+│   │   ├── build-frontend.md       # /build-frontend - Build Next.js
+│   │   └── ...                     # Más comandos útiles
+│   └── hooks/                      # 8 hooks de automatización
+│       ├── on-edit-watched-file.sh # Auto-test al editar
+│       ├── on-before-tool-use.sh   # Validaciones pre-ejecución
+│       └── ...                     # Más hooks de workflow
+│
+├── 📁 mcp-foundry/                 # MCP Server Personalizado
+│   ├── src/                        # Wrapper de CLI de Foundry
+│   ├── build/                      # Build del MCP server
+│   └── package.json                # Configuración del servidor MCP
+│
+├── 📄 README.md                    # 📚 Documentación principal del proyecto
+├── 📄 CLAUDE.md                    # 🤖 Guía completa para IA (arquitectura técnica)
+├── 📄 AGENTS.md                    # 🧠 Sistema de agentes de IA
+├── 📄 IA.md                        # 📊 Retrospectiva del uso de IA
+├── 📄 TESTING.md                   # 🧪 Guía completa de testing
+├── 📄 METAMASK.md                  # 🦊 Configuración de MetaMask
+├── 📄 CHECKLIST_STATUS.md          # ✅ Estado del checklist de desarrollo
+├── 📄 package.json                 # Dependencias root (workspaces)
+└── 📄 .gitignore                   # Archivos ignorados por Git
+```
+
+### 📝 Descripción de Directorios Principales
+
+#### 📁 **`sc/` - Smart Contracts**
+Contiene toda la lógica blockchain del proyecto desarrollada con Solidity y Foundry:
+- **Contrato Principal**: `SupplyChain.sol` con gestión de roles, tokens y transferencias
+- **Tests Completos**: 22 tests unitarios (100% passing) usando Foundry Test
+- **Scripts de Deploy**: Automatización para despliegue en Anvil local
+- **Coverage**: Reportes de cobertura de código de tests
+
+#### 📁 **`web/` - Frontend**
+Aplicación web moderna desarrollada con Next.js 15 y TypeScript:
+- **App Router**: Arquitectura de páginas modular (dashboard, tokens, transfers, admin)
+- **Web3 Integration**: Conexión con MetaMask y contrato usando ethers.js v6
+- **UI Components**: Componentes reutilizables con Tailwind CSS y shadcn/ui
+- **State Management**: Context API para estado global y persistencia en localStorage
+
+#### 📁 **`video/` - Video de Presentación**
+Video demostración del proyecto funcionando (máximo 5 minutos):
+- **Demo Completa**: Muestra el flujo Producer → Factory → Retailer → Consumer
+- **Script Documentado**: Guión detallado para grabar la presentación
+
+#### 📁 **`.claude/` - Sistema de IA**
+Configuración completa para desarrollo asistido por Claude Code:
+- **10 Agentes Especializados**: Expertos en Solidity, Testing, Frontend, Security, etc.
+- **14 Comandos Slash**: Automatización de tareas comunes (`/test-sc`, `/deploy-local`, etc.)
+- **8 Hooks de Workflow**: Automatizaciones que se ejecutan en eventos (editar, tool use, etc.)
+
+#### 📁 **`mcp-foundry/` - MCP Server**
+Model Context Protocol server personalizado para Foundry:
+- **Wrapper de CLI**: Envuelve comandos `forge`, `anvil` y `cast`
+- **Integración con IA**: Permite a Claude Code interactuar con herramientas de Foundry
+- **Automatización**: Facilita testing, deployment y debugging
+
+### 📚 Documentación del Proyecto
+
+El proyecto incluye documentación exhaustiva en archivos markdown:
+
+- **`README.md`** (este archivo): Guía principal para estudiantes con instrucciones de instalación, desarrollo y evaluación
+- **`CLAUDE.md`**: Documentación técnica completa para IA (arquitectura, stack, reglas de negocio, comandos)
+- **`AGENTS.md`**: Explicación del sistema de 10 agentes especializados y cómo utilizarlos
+- **`IA.md`**: Retrospectiva del uso de IA en el desarrollo (tiempo consumido, errores comunes, chats exportados)
+- **`TESTING.md`**: Guía completa de testing (unit tests, E2E tests, troubleshooting)
+- **`METAMASK.md`**: Tutorial de configuración de MetaMask para desarrollo local
+- **`CHECKLIST_STATUS.md`**: Seguimiento del progreso de desarrollo
+
+### 🎯 ¿Por Dónde Empezar?
+
+Si eres nuevo en el proyecto, te recomendamos este orden:
+
+1. **Leer `README.md`** (este archivo) - Entender objetivos y arquitectura
+2. **Configurar prerequisitos** - Node.js, Foundry, MetaMask (ver [Quick Start](#-quick-start---levantar-el-proyecto))
+3. **Revisar `sc/src/SupplyChain.sol`** - Entender el smart contract
+4. **Ejecutar tests** - `cd sc && forge test -vvv`
+5. **Explorar el frontend** - `cd web && npm run dev`
+6. **Consultar `CLAUDE.md`** - Para detalles técnicos completos
+
+---
+
 ## 🚀 Quick Start - Levantar el Proyecto
 
 **Si ya tienes el proyecto clonado y quieres ejecutarlo rápidamente, sigue estos pasos:**
