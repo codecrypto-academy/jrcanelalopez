@@ -20,7 +20,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "besu-lib/*": ["../lib/src/*"]
+      "besu-network-lib": ["../lib/dist/src/create-besu-networks"],
+      "besu-lib/*": ["../lib/dist/src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

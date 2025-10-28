@@ -1,47 +1,28 @@
 import { NextResponse } from 'next/server';
 import { networkStore } from '@/lib/network-store';
 import { ApiResponse } from '@/types/besu';
-import BesuNetwork from '@/lib/besu';
+
+const BESU_SERVER_URL = process.env.BESU_SERVER_URL || 'http://localhost:3001';
 
 /**
  * POST /api/cleanup - Cleanup all networks
  */
 export async function POST(): Promise<NextResponse<ApiResponse<void>>> {
   try {
-    // Get all networks from store
-    const networks = networkStore.getAllNetworks();
-    
-    // Cleanup each network using the external library
-    for (const network of networks) {
-      try {
-        const besuNetworkInstance = new BesuNetwork(
-          {
-            name: network.id,
-            chainId: network.config.chainId,
-            subnet: network.config.subnet,
-            consensus: network.config.consensus,
-            gasLimit: network.config.gasLimit,
-            blockTime: network.config.blockTime,
-            signerAccounts: network.config.signerAccounts
-          },
-          "./networks"
-        );
-        
-        // Destroy the network (stops containers and removes network)
-        await besuNetworkInstance.destroy();
-      } catch (error) {
-        console.warn(`Failed to cleanup network ${network.id}:`, error);
-        // Continue with other networks even if one fails
-      }
+    // Forward to Besu server
+    const response = await fetch(`${BESU_SERVER_URL}/cleanup`, {
+      method: 'POST'
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to cleanup networks');
     }
-    
-    // Clear the network store
+
+    // Clear the local network store
     networkStore.clear();
 
-    return NextResponse.json({
-      success: true,
-      message: 'All networks cleaned up successfully'
-    });
+    return NextResponse.json(await response.json());
 
   } catch (error) {
     return NextResponse.json({

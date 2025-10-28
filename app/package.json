@@ -6,7 +6,10 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "besu-server": "node besu-server.js",
+    "dev:full": "concurrently --names \"BESU,NEXT\" -c \"blue,green\" \"npm run besu-server\" \"npm run dev\"",
+    "start:full": "concurrently --names \"BESU,NEXT\" -c \"blue,green\" \"npm run besu-server\" \"npm run start\""
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
@@ -14,7 +17,10 @@
     "@hookform/resolvers": "^5.1.1",
     "besu-network-lib": "file:../lib",
     "clsx": "^2.1.1",
+    "concurrently": "^9.2.1",
+    "cors": "^2.8.5",
     "date-fns": "^4.1.0",
+    "express": "^5.1.0",
     "next": "15.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

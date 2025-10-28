@@ -1,18 +1,23 @@
 /**
  * Besu Network Library Exports
- * 
+ *
  * This file re-exports components from the besu-network-lib
  * to make them available throughout our application.
+ *
+ * IMPORTANTE: Usa el alias 'besu-network-lib' configurado en next.config.js
+ * que apunta a ../lib/dist/src/create-besu-networks.js (código compilado)
  */
 
-// Using dynamic require since Next.js static analysis might have issues with the import
-const besuModule = require('../../../../lib/src/create-besu-networks');
+// ✅ Usar ES6 imports con el alias configurado en next.config.js
+import BesuNetworkClass, {
+  createBesuNetworkWithAutoAssociation as createWithAutoAssoc
+} from 'besu-network-lib';
 
-// Re-export the default BesuNetwork class and other needed exports
-export const BesuNetwork = besuModule.default;
-export const createBesuNetworkWithAutoAssociation = besuModule.createBesuNetworkWithAutoAssociation;
+// Re-export usando ES6
+export const BesuNetwork = BesuNetworkClass;
+export const createBesuNetworkWithAutoAssociation = createWithAutoAssoc;
 
-// Type exports that may be needed
+// Type exports usando el mismo alias
 export type {
   BesuNodeConfig,
   SignerAccount,
@@ -22,6 +27,6 @@ export type {
   BesuNodeDefinition,
   BesuNetworkCreateOptions,
   DockerContainerConfig
-} from '../../../../lib/src/create-besu-networks';
+} from 'besu-network-lib';
 
 export default BesuNetwork;

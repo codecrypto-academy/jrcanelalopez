@@ -4,13 +4,41 @@ import { BesuNetworkConfig, BesuNodeDefinition, NetworkFormData, BesuNetwork } f
  * Convert ETH amount to Wei
  */
 export function ethToWei(ethAmount: string): string {
+  console.log(`🔄 ethToWei: input="${ethAmount}"`);
+
   const eth = parseFloat(ethAmount);
   if (isNaN(eth) || eth < 0) {
+    console.log(`❌ ethToWei: Invalid - eth=${eth}, isNaN=${isNaN(eth)}`);
     throw new Error('Invalid ETH amount');
   }
+
   // 1 ETH = 10^18 Wei
-  const weiAmount = Math.floor(eth * Math.pow(10, 18));
-  return weiAmount.toString();
+  // Use BigInt to handle large numbers without scientific notation
+  try {
+    // Convert to integer ETH first to avoid floating point issues
+    const ethInteger = Math.floor(eth);
+    const ethDecimal = eth - ethInteger;
+
+    // Calculate integer and decimal parts separately
+    const weiInteger = BigInt(ethInteger) * BigInt(10 ** 18);
+    const weiDecimal = BigInt(Math.floor(ethDecimal * (10 ** 18)));
+
+    const totalWei = weiInteger + weiDecimal;
+    const weiString = totalWei.toString();
+
+    console.log(`✅ ethToWei: ${eth} ETH = ${weiString} Wei`);
+
+    return weiString;
+  } catch (error) {
+    // Fallback for older environments or edge cases
+    const weiAmount = Math.floor(eth * Math.pow(10, 18));
+    // Use toFixed(0) to avoid scientific notation
+    const weiString = weiAmount.toFixed(0);
+
+    console.log(`✅ ethToWei (fallback): ${eth} ETH = ${weiString} Wei`);
+
+    return weiString;
+  }
 }
 
 /**
@@ -44,16 +72,51 @@ export function generateSubnet(networkName: string): string {
 }
 
 /**
+ * Check if an IP is reserved (network, broadcast, or gateway)
+ */
+export function isReservedIP(ip: string, subnet: string): boolean {
+  const ipParts = ip.split('.').map(part => parseInt(part, 10));
+  const [subnetIp, mask] = subnet.split('/');
+  const subnetParts = subnetIp.split('.').map(part => parseInt(part, 10));
+  const subnetMask = parseInt(mask, 10);
+
+  // Network address (typically .0.0 for /16 or .0 for /24)
+  if (ipParts[2] === 0 && ipParts[3] === 0) {
+    return true;
+  }
+
+  // Gateway address (typically .0.1 or .x.1)
+  if (ipParts[3] === 1) {
+    return true;
+  }
+
+  // Broadcast address for /16 subnet (x.x.255.255)
+  if (subnetMask === 16 && ipParts[2] === 255 && ipParts[3] === 255) {
+    return true;
+  }
+
+  // Broadcast address for /24 subnet (x.x.x.255)
+  if (subnetMask === 24 && ipParts[3] === 255) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
  * Generate IP addresses for nodes based on subnet
+ * Avoids reserved IPs (network, gateway, broadcast)
  */
 export function generateNodeIPs(subnet: string, nodeCount: number): string[] {
   const baseIP = subnet.split('/')[0].split('.').slice(0, 2).join('.');
   const ips: string[] = [];
-  
+
+  // Start from .0.10 to avoid .0.0 (network) and .0.1 (gateway)
   for (let i = 0; i < nodeCount; i++) {
-    ips.push(`${baseIP}.0.${10 + i}`);
+    const ip = `${baseIP}.0.${10 + i}`;
+    ips.push(ip);
   }
-  
+
   return ips;
 }
 
@@ -104,11 +167,20 @@ export function formDataToBesuConfig(formData: NetworkFormData): {
   config: BesuNetworkConfig;
   nodes: BesuNodeDefinition[];
 } {
+  console.log('📦 formDataToBesuConfig: signerAccounts input:', formData.signerAccounts);
+
   // Convert ETH amounts to Wei
-  const signerAccounts = formData.signerAccounts.map(account => ({
-    address: account.address,
-    weiAmount: ethToWei(account.ethAmount)
-  }));
+  const signerAccounts = formData.signerAccounts.map((account, index) => {
+    console.log(`  Account ${index}: address="${account.address}", ethAmount="${account.ethAmount}"`);
+    const weiAmount = ethToWei(account.ethAmount);
+    console.log(`  Account ${index}: weiAmount="${weiAmount}"`);
+    return {
+      address: account.address,
+      weiAmount
+    };
+  });
+
+  console.log('📤 formDataToBesuConfig: signerAccounts output:', signerAccounts);
 
   // Generate subnet if not provided
   const subnet = formData.subnet || generateSubnet(formData.name);
@@ -233,6 +305,19 @@ export function validateNetworkConfig(
     errors.push('Subnet must be in CIDR format (e.g., 10.0.0.0/24)');
   }
 
+  // Signer account validation
+  if (formData.signerAccounts && formData.signerAccounts.length > 0) {
+    formData.signerAccounts.forEach((account, index) => {
+      const ethAmount = parseFloat(account.ethAmount);
+      if (isNaN(ethAmount) || ethAmount <= 0) {
+        errors.push(`Signer account ${index + 1} must have a positive ETH amount (current: ${account.ethAmount})`);
+      }
+      if (!account.address || !account.address.match(/^0x[a-fA-F0-9]{40}$/)) {
+        errors.push(`Signer account ${index + 1} must have a valid Ethereum address`);
+      }
+    });
+  }
+
   // Node validation
   if (!formData.nodes || formData.nodes.length === 0) {
     errors.push('At least one node is required');
@@ -248,6 +333,8 @@ export function validateNetworkConfig(
         errors.push(`Node ${index + 1} must have a valid IP address`);
       } else if (formData.subnet && !isIpInSubnet(node.ip, formData.subnet)) {
         errors.push(`Node ${index + 1} IP (${node.ip}) must be within the subnet range (${formData.subnet})`);
+      } else if (formData.subnet && isReservedIP(node.ip, formData.subnet)) {
+        errors.push(`Node ${index + 1} IP (${node.ip}) is a reserved address (network .0.0, gateway .x.1, or broadcast). Use IPs like ${generateNodeIPs(formData.subnet, 1)[0]}`);
       }
     });
   }

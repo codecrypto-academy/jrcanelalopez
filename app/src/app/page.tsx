@@ -68,9 +68,11 @@ export default function NetworksPage() {
   };
 
   const handleCreateNetwork = async (formData: NetworkFormData) => {
+    console.log("🚀🚀🚀 NUEVO CÓDIGO CARGADO - Version 2.0 🚀🚀🚀");
     try {
       setError(null);
       const { config, nodes } = formDataToBesuConfig(formData);
+      console.log("📤 Sending request to /api/networks with:", { config, nodes });
       const response = await fetch("/api/networks", {
         method: "POST",
         headers: {
@@ -80,12 +82,57 @@ export default function NetworksPage() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Network creation error:", errorData);
-        throw new Error(
-          errorData.error ||
-            `Failed to create network: ${response.status} ${response.statusText}`
-        );
+        console.log("❌ Response not OK:", {
+          status: response.status,
+          statusText: response.statusText,
+          headers: Object.fromEntries(response.headers.entries())
+        });
+
+        let errorData;
+        let rawText;
+        try {
+          // First get the raw text
+          rawText = await response.text();
+          console.log("📄 Raw response text:", rawText);
+
+          // Then try to parse it as JSON
+          errorData = JSON.parse(rawText);
+          console.log("✅ Parsed JSON:", errorData);
+        } catch (parseError) {
+          console.log("❌ JSON parse error:", parseError);
+          console.log("Raw text was:", rawText);
+          errorData = {
+            error: {
+              message: rawText || `Server error: ${response.status} ${response.statusText}`,
+            },
+          };
+        }
+
+        // Handle structured error response
+        const errorInfo = errorData.error || errorData;
+        console.log("🔍 Error info extracted:", errorInfo);
+
+        let errorMessage = typeof errorInfo === "string" ? errorInfo : errorInfo.message;
+        console.log("📝 Error message:", errorMessage);
+
+        // Add helpful context based on error type
+        if (errorInfo.code === "CONNECTION_ERROR" || errorInfo.layer === "besu-server") {
+          console.log("🔴 Besu server connection error:");
+          console.log("- errorData:", JSON.stringify(errorData, null, 2));
+          console.log("- errorInfo:", JSON.stringify(errorInfo, null, 2));
+          errorMessage = `${errorMessage}\n\n💡 Make sure the Besu server is running:\n   node app/besu-server.js`;
+        } else {
+          console.log("🔴 Network creation error:");
+          console.log("- errorData:", JSON.stringify(errorData, null, 2));
+          console.log("- errorInfo:", JSON.stringify(errorInfo, null, 2));
+        }
+
+        // Log stack trace in development
+        if (errorInfo.details) {
+          console.log("📚 Stack trace:", errorInfo.details);
+        }
+
+        throw new Error(errorMessage);
       }
 
       await fetchNetworks();

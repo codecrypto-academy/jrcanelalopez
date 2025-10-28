@@ -46,3 +46,6 @@ data/
 # Temporary files
 tmp/
 temp/
+
+# Sessions
+sessions/

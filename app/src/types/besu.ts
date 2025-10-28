@@ -1,26 +1,62 @@
 // Types for Besu network management
+
+// ============================================
+// RE-EXPORT tipos de la librería (source of truth)
+// ============================================
+// NOTA: Estos tipos están comentados temporalmente hasta que la librería esté compilada
+// Una vez compilada, descomentar y eliminar las definiciones duplicadas abajo
+
+/*
+export type {
+  BesuNetworkConfig,
+  SignerAccount,
+  BesuNodeDefinition,
+  BesuNetworkCreateOptions,
+} from 'besu-network-lib';
+*/
+
+// ============================================
+// TIPOS TEMPORALES (hasta que librería esté compilada)
+// ============================================
+// TODO: Eliminar estos cuando la librería compile correctamente
+// y descomentar los re-exports de arriba
+
 export interface BesuNetworkConfig {
   name: string;
   chainId: number;
   subnet: string;
-  consensus: 'clique' | 'ibft2';
+  consensus: 'clique' | 'ibft2' | 'qbft';
   gasLimit: string;
-  blockTime: number;
-  signerAccounts: SignerAccount[];
+  blockTime?: number;
+  signerAccounts?: SignerAccount[];
+  accounts?: Array<{ address: string; weiAmount: string }>;
 }
 
 export interface SignerAccount {
   address: string;
   weiAmount: string;
+  minerNode?: string; // Asociación con nodo miner
 }
 
 export interface BesuNodeDefinition {
   name: string;
   ip?: string;
   rpcPort: number;
-  p2pPort: number;
-  type: 'bootnode' | 'miner' | 'rpc' | 'validator';
+  p2pPort?: number; // ✅ OPCIONAL como en librería
+  type: 'bootnode' | 'miner' | 'rpc' | 'node'; // ✅ Usar 'node' en lugar de 'validator'
+  signerAddress?: string; // Para miners en consenso Clique
 }
+
+export interface BesuNetworkCreateOptions {
+  nodes: BesuNodeDefinition[];
+  initialBalance?: string;
+  autoResolveSubnetConflicts?: boolean;
+  autoGenerateSignerAccounts?: boolean; // ✅ Agregado
+}
+
+// ============================================
+// TIPOS ESPECÍFICOS DE LA UI/APP
+// ============================================
 
 export interface BesuNetwork {
   id: string;
@@ -70,7 +106,7 @@ export interface ApiResponse<T = unknown> {
 export interface NetworkFormData {
   name: string;
   chainId: number;
-  consensus: 'clique' | 'ibft2';
+  consensus: 'clique' | 'ibft2' | 'qbft';
   gasLimit: string;
   blockTime: number;
   subnet?: string;
@@ -80,10 +116,11 @@ export interface NetworkFormData {
   }[];
   nodes: {
     name: string;
-    type: 'bootnode' | 'miner' | 'rpc' | 'validator';
+    type: 'bootnode' | 'miner' | 'rpc' | 'node';
     rpcPort: number;
-    p2pPort: number;
+    p2pPort?: number; // ✅ OPCIONAL
     ip?: string;
+    signerAddress?: string; // Para miners
   }[];
 }
 
